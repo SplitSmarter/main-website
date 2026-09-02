@@ -3,6 +3,7 @@ import { RootLayout } from './layouts/RootLayout';
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
 import { AnalyticsPage } from '../features/analytics/pages/AnalyticsPage';
 import { WorkflowPage } from '../features/workflow/pages/WorkflowPage';
+import {WorkflowMobilePage} from "@/features/workflow/pages/WorkflowMobilePage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ export const router = createBrowserRouter([
       { index: true, element: <DashboardPage /> },
       { path: 'analytics', element: <AnalyticsPage /> },
       { path: 'workflow', element: <WorkflowPage /> },
+      { path: 'mobile', element: <WorkflowMobilePage /> },
     ],
   },
 ]);

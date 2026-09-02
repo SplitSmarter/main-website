@@ -1,5 +1,5 @@
 import {createTheme, virtualColor} from '@mantine/core';
-import type {CSSVariablesResolver, MantineColorsTuple} from '@mantine/core';
+import type {CSSVariablesResolver, MantineColorsTuple, DefaultMantineColor} from '@mantine/core';
 
 // 1. Define Primary Brand Palettes (10 Shades Each)
 const brandBlue: MantineColorsTuple = [
@@ -51,7 +51,6 @@ export const appTheme = createTheme({
 export const resolver: CSSVariablesResolver = (theme) => ({
     variables: {
         '--app-font-family': theme.fontFamily,
-        // Safely cast or format defaultRadius to a string
         '--app-radius': typeof theme.defaultRadius === 'number'
             ? `${theme.defaultRadius}px`
             : `var(--mantine-radius-${theme.defaultRadius || 'sm'})`,
@@ -76,9 +75,12 @@ export const resolver: CSSVariablesResolver = (theme) => ({
     },
 });
 
-// 4. TypeScript Override for Autocomplete
+// 4. TypeScript Override for Autocomplete & Color Prop Types
 declare module '@mantine/core' {
     export interface MantineThemeColorsOverride {
-        colors: Record<'brand' | 'teal' | 'adaptiveBrand', MantineColorsTuple>;
+        colors: Record<
+            'brand' | 'teal' | 'adaptiveBrand' | 'dimmed' | 'blue' | 'green' | 'cyan' | DefaultMantineColor,
+            MantineColorsTuple
+        >;
     }
 }

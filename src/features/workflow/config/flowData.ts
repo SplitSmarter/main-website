@@ -1,16 +1,16 @@
-import type { Node, Edge } from '@xyflow/react';
+import type {Node, Edge} from '@xyflow/react';
 
 const CENTER_X = 350;
 const CENTER_Y = 200;
 const RADIUS = 180;
 
-const outerNodesConfig = [
-    { id: '2', label: '⚡ Client Store', angle: 0 },
-    { id: '3', label: '🌐 REST API', angle: 60 },
-    { id: '4', label: '💾 Database Engine', angle: 120 },
-    { id: '5', label: '🔒 Auth Provider', angle: 180 },
-    { id: '6', label: '📊 Metrics Collector', angle: 240 },
-    { id: '7', label: '🔔 Notification Service', angle: 300 },
+export const outerNodesConfig = [
+    {id: '2', label: '⚡ Client Store', angle: 0},
+    {id: '3', label: '🌐 REST API', angle: 60},
+    {id: '4', label: '💾 Database Engine', angle: 120},
+    {id: '5', label: '🔒 Auth Provider', angle: 180},
+    {id: '6', label: '📊 Metrics Collector', angle: 240},
+    {id: '7', label: '🔔 Notification Service', angle: 300},
 ];
 
 const calculatePosition = (angleInDegrees: number) => {
@@ -23,8 +23,8 @@ const calculatePosition = (angleInDegrees: number) => {
 
 const centralNode: Node = {
     id: '1',
-    data: { label: '🌟 Central Hub' },
-    position: { x: CENTER_X, y: CENTER_Y },
+    data: {label: '🌟 Central Hub'},
+    position: {x: CENTER_X, y: CENTER_Y},
     style: {
         background: '#1c7ed6',
         color: '#fff',
@@ -36,9 +36,9 @@ const centralNode: Node = {
     },
 };
 
-const peripheralNodes: Node[] = outerNodesConfig.map((item) => ({
+const peripheralNodes: Node[] = outerNodesConfig.map((item: { id: string; label: string; angle: number }) => ({
     id: item.id,
-    data: { label: item.label },
+    data: {label: item.label},
     position: calculatePosition(item.angle),
     style: {
         background: 'var(--app-surface, #ffffff)',
@@ -52,7 +52,7 @@ const peripheralNodes: Node[] = outerNodesConfig.map((item) => ({
 
 export const initialNodes: Node[] = [centralNode, ...peripheralNodes];
 
-export const initialEdges: Edge[] = outerNodesConfig.map((item) => ({
+export const initialEdges: Edge[] = outerNodesConfig.map((item: { id: string; label: string; angle: number }) => ({
     id: `e1-${item.id}`,
     source: '1',
     target: item.id,

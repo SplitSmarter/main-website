@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { create } from 'zustand';
 import { IconSparkles } from '@tabler/icons-react';
 import { IsometricButton } from '@/components/IsometricButton/IsometricButton';
+import {DrawBorderButton} from "@/components/DrawBorderButton/DrawBorderButton.tsx";
 
 interface DashboardStore {
   count: number;
@@ -51,6 +52,9 @@ export function DashboardPage() {
                 <IconSparkles size={18} color="#00f2fe" />
                 <span>Explore Platform</span>
               </IsometricButton>
+              <DrawBorderButton onClick={() => alert('SVG Draw Button Clicked!')}>
+                Hover To Draw
+              </DrawBorderButton>
             </Center>
           </Stack>
         </Paper>
