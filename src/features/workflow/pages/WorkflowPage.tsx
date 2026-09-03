@@ -32,7 +32,7 @@ const CENTER_NODE_ID = '1';
 const FIXED_NODE_ID = 'fixed-anchor-node';
 const DYNAMIC_EDGE_ID = 'edge-fixed-to-active';
 const ANIMATION_DURATION = 500;
-const TARGET_SLOT_ANGLE = 0;
+const BREAKPOINT_WIDTH = 850;
 
 function cubicBezierEase(t: number): number {
     const p1 = 0.25;
@@ -45,34 +45,34 @@ export function WorkflowInner() {
 
     const currentHeight = containerHeight || 700;
     const currentWidth = containerWidth || 900;
+    const isVertical = currentWidth < BREAKPOINT_WIDTH;
 
-    // Layout Ratios (4 : 0.5 : 2.5 : 3 => Total 10 parts)
-    const sec1Width = currentWidth * (4 / 10);
-    const spacerWidth = currentWidth * (0.5 / 10);
-    const sec2Width = currentWidth * (2.5 / 10);
+    const sec1Width = isVertical ? currentWidth : currentWidth * (4 / 10);
+    const spacerWidth = isVertical ? 0 : currentWidth * (0.5 / 10);
+    const sec2Width = isVertical ? currentWidth : currentWidth * (2.5 / 10);
+
+    const sec1Height = isVertical ? currentHeight * 0.55 : currentHeight;
+    const sec2Height = isVertical ? currentHeight * 0.45 : currentHeight;
 
     const sec1Center = {
         x: sec1Width / 2,
-        y: currentHeight / 2
+        y: sec1Height / 2
     };
 
-    const sec2Center = {
-        x: sec1Width + spacerWidth + (sec2Width / 2),
-        y: currentHeight / 2
-    };
+    const sec2Center = isVertical
+        ? {x: sec2Width / 2, y: sec1Height + (sec2Height / 2)}
+        : {x: sec1Width + spacerWidth + (sec2Width / 2), y: currentHeight / 2};
 
-    const availableHeight = currentHeight - 40;
+    const availableHeight = sec1Height - 40;
 
     const computedRadius = Math.min(
         sec1Width * 0.38,
         availableHeight * 0.38,
-        180
+        160
     );
 
-    // --- DYNAMICALLY CALCULATE MOBILE NODE SIZES BASED ON SECTION 2 WIDTH ---
-    // Keep the mobile node bounded nicely inside Section 2 with padding
     const dynamicAnchorWidth = Math.min(sec2Width * 0.85, 220);
-    const dynamicAnchorHeight = Math.min(availableHeight * 0.85, 440);
+    const dynamicAnchorHeight = Math.min(sec2Height * 0.85, 420);
 
     const initialAnchorNode: Node = {
         id: FIXED_NODE_ID,
@@ -80,9 +80,9 @@ export function WorkflowInner() {
         data: {
             activeNodeId: '2',
             activeNodeLabel: '⚡ Client Store',
-            // Pass dynamic bounds down if needed by the node component
             width: dynamicAnchorWidth,
             height: dynamicAnchorHeight,
+            isVertical: isVertical,
         },
         position: sec2Center,
         draggable: false,
@@ -104,6 +104,8 @@ export function WorkflowInner() {
 
     const {getNodes, setViewport} = useReactFlow();
     const animFrameIdRef = useRef<number | null>(null);
+    const lastLayoutModeRef = useRef<boolean>(isVertical);
+    const lastDimensionsRef = useRef({w: currentWidth, h: currentHeight});
 
     const boundsRef = useRef({
         center: {
@@ -113,10 +115,10 @@ export function WorkflowInner() {
             maxY: sec1Center.y + 40,
         },
         satellite: {
-            minX: 5,
+            minX: 10,
             maxX: sec1Width - 10,
             minY: 20,
-            maxY: currentHeight - 20,
+            maxY: sec1Height - 20,
         },
         anchorPos: sec2Center
     });
@@ -130,18 +132,27 @@ export function WorkflowInner() {
                 maxY: sec1Center.y + 40
             },
             satellite: {
-                minX: 5,
+                minX: 10,
                 maxX: sec1Width - 10,
                 minY: 20,
-                maxY: currentHeight - 20
+                maxY: sec1Height - 20
             },
             anchorPos: sec2Center
         };
-    }, [sec1Center.x, sec1Center.y, sec1Width, sec2Center.x, sec2Center.y, currentHeight]);
+    }, [sec1Center.x, sec1Center.y, sec1Width, sec1Height, sec2Center.x, sec2Center.y]);
 
-    // Recalculate Node Positions & Dynamic Phone Dimensions on Resize
+    // Inside WorkflowInner.tsx, update your resize useEffect:
     useEffect(() => {
         if (!containerWidth || !containerHeight) return;
+
+        const widthDiff = Math.abs(containerWidth - lastDimensionsRef.current.w);
+        const heightDiff = Math.abs(containerHeight - lastDimensionsRef.current.h);
+        const modeChanged = lastLayoutModeRef.current !== isVertical;
+
+        if (!modeChanged && widthDiff < 15 && heightDiff < 15) return;
+
+        lastLayoutModeRef.current = isVertical;
+        lastDimensionsRef.current = {w: containerWidth, h: containerHeight};
 
         setNodes((nds) => {
             const outerNodes = nds.filter((n) => n.id !== CENTER_NODE_ID && n.id !== FIXED_NODE_ID);
@@ -152,11 +163,12 @@ export function WorkflowInner() {
                 if (n.id === FIXED_NODE_ID) {
                     return {
                         ...n,
-                        position: boundsRef.current.anchorPos,
+                        position: sec2Center,
                         data: {
                             ...n.data,
                             width: dynamicAnchorWidth,
                             height: dynamicAnchorHeight,
+                            isVertical: isVertical,
                         }
                     };
                 }
@@ -169,7 +181,7 @@ export function WorkflowInner() {
                 }
 
                 const outerIdx = outerNodes.findIndex((item) => item.id === n.id);
-                const angle = outerIdx * angleStep;
+                const angle = outerIdx !== -1 ? outerIdx * angleStep : 0;
 
                 return {
                     ...n,
@@ -180,7 +192,22 @@ export function WorkflowInner() {
                 };
             });
         });
-    }, [containerWidth, containerHeight, sec2Width, availableHeight, setNodes]);
+
+        // FIX: When switching layout modes, update the dynamic edge target to match the correct node orientation
+        if (modeChanged) {
+            setEdges((eds) =>
+                eds.map((edge) => {
+                    if (edge.id === DYNAMIC_EDGE_ID) {
+                        // In vertical mode, point to the top-most node or center node depending on your layout design.
+                        // If your vertical layout stack puts a specific node on top, target that ID (e.g., CENTER_NODE_ID or the top outer node).
+                        const newTarget = isVertical ? CENTER_NODE_ID : '2';
+                        return {...edge, target: newTarget};
+                    }
+                    return edge;
+                })
+            );
+        }
+    }, [containerWidth, containerHeight, isVertical, sec1Center, sec2Center, computedRadius, dynamicAnchorWidth, dynamicAnchorHeight, setNodes, setEdges]);
 
     const clampNodePosition = useCallback((id: string, x: number, y: number) => {
         if (id === FIXED_NODE_ID) {
@@ -208,7 +235,6 @@ export function WorkflowInner() {
                 const nextNodes = applyNodeChanges(changes, nds);
                 return nextNodes.map((node) => {
                     if (node.id === FIXED_NODE_ID) return node;
-
                     const clamped = clampNodePosition(node.id, node.position.x, node.position.y);
                     return {...node, position: clamped};
                 });
@@ -248,9 +274,7 @@ export function WorkflowInner() {
     const onNodeDrag = useCallback(
         (_: MouseEvent | TouchEvent, node: Node) => {
             if (node.id === FIXED_NODE_ID) return;
-
             const clamped = clampNodePosition(node.id, node.position.x, node.position.y);
-
             setNodes((nds) =>
                 nds.map((n) => (n.id === node.id ? {...n, position: clamped} : n))
             );
@@ -307,7 +331,6 @@ export function WorkflowInner() {
                 let angle = Math.atan2(dy, dx);
                 if (angle < 0) angle += 2 * Math.PI;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
                 return {id: node.id, angle, dist};
             });
 
@@ -321,7 +344,10 @@ export function WorkflowInner() {
 
             const clickedItem = nodePositions[clickedIndex];
 
-            let rotationDelta = TARGET_SLOT_ANGLE - clickedItem.angle;
+            // FIX: If vertical, align the active node to point downwards (Math.PI / 2), otherwise point to the right (0)
+            const targetSlotAngle = isVertical ? Math.PI / 2 : 0;
+
+            let rotationDelta = targetSlotAngle - clickedItem.angle;
             rotationDelta = Math.atan2(Math.sin(rotationDelta), Math.cos(rotationDelta));
 
             if (Math.abs(Math.abs(rotationDelta) - Math.PI) < 0.001) {
@@ -372,7 +398,6 @@ export function WorkflowInner() {
                             },
                         };
                     });
-
                     return changed ? nextNodes : nds;
                 });
 
@@ -383,7 +408,7 @@ export function WorkflowInner() {
 
             animFrameIdRef.current = requestAnimationFrame(animateStep);
         },
-        [getNodes, setNodes, setEdges, computedRadius]
+        [getNodes, setNodes, setEdges, computedRadius, isVertical]
     );
 
     const handleReset = () => {
@@ -396,7 +421,7 @@ export function WorkflowInner() {
                 <div>
                     <Title order={3} fw={600}>Workflow Diagram</Title>
                     <Text c="dimmed" size="xs">
-                        Fully Dynamic Layout (Ratio: 4 : 0.5 : 2.5 : 3)
+                        {isVertical ? 'Vertical Stack Layout (Small Screen)' : 'Fully Dynamic Layout'}
                     </Text>
                 </div>
 
@@ -420,117 +445,6 @@ export function WorkflowInner() {
                     background: 'transparent',
                 }}
             >
-                {/* --- VISUAL DEBUG BOUNDARIES LAYER --- */}
-                <Box
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        display: 'flex',
-                        pointerEvents: 'none',
-                        zIndex: 0,
-                    }}
-                >
-                    {/* SECTION 1 BOUNDARY (Flex 4) */}
-                    <Box
-                        style={{
-                            flex: 4,
-                            position: 'relative',
-                            backgroundColor: 'rgba(34, 139, 230, 0.04)',
-                            border: '1.5px dashed #339af0',
-                            boxSizing: 'border-box',
-                            padding: '4px',
-                        }}
-                    >
-                        <Text fw={700} size="8px" c="blue.7">SEC 1 (4)</Text>
-
-                        {/* Orbit Ring */}
-                        <Box
-                            style={{
-                                position: 'absolute',
-                                left: sec1Center.x - computedRadius,
-                                top: sec1Center.y - computedRadius,
-                                width: computedRadius * 2,
-                                height: computedRadius * 2,
-                                borderRadius: '50%',
-                                border: '1.5px dashed #f06595',
-                                backgroundColor: 'rgba(240, 101, 149, 0.02)',
-                                pointerEvents: 'none',
-                            }}
-                        />
-
-                        {/* Center Hub */}
-                        <Box
-                            style={{
-                                position: 'absolute',
-                                left: sec1Center.x - 40,
-                                top: sec1Center.y - 40,
-                                width: 80,
-                                height: 80,
-                                border: '1.5px dashed #845ef7',
-                                backgroundColor: 'rgba(132, 94, 247, 0.08)',
-                                borderRadius: '6px',
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    </Box>
-
-                    {/* SPACER BOUNDARY (Flex 0.5) */}
-                    <Box
-                        style={{
-                            flex: 0.5,
-                            backgroundColor: 'rgba(134, 142, 150, 0.03)',
-                            border: '1.5px dashed #868e96',
-                            boxSizing: 'border-box',
-                            padding: '4px',
-                        }}
-                    >
-                        <Text fw={700} size="8px" c="gray.7">SP (0.5)</Text>
-                    </Box>
-
-                    {/* SECTION 2 BOUNDARY (Flex 2.5) */}
-                    <Box
-                        style={{
-                            flex: 2.5,
-                            position: 'relative',
-                            backgroundColor: 'rgba(18, 184, 134, 0.04)',
-                            border: '1.5px dashed #20c997',
-                            boxSizing: 'border-box',
-                            padding: '4px',
-                        }}
-                    >
-                        <Text fw={700} size="8px" c="teal.7">SEC 2 (2.5)</Text>
-
-                        {/* Dynamically Matched Target Anchor Box Bounds */}
-                        <Box
-                            style={{
-                                position: 'absolute',
-                                left: (sec2Width / 2) - (dynamicAnchorWidth / 2),
-                                top: (currentHeight / 2) - (dynamicAnchorHeight / 2),
-                                width: dynamicAnchorWidth,
-                                height: dynamicAnchorHeight,
-                                border: '1.5px dashed #12b886',
-                                backgroundColor: 'rgba(18, 184, 134, 0.08)',
-                                borderRadius: '16px',
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    </Box>
-
-                    {/* SECTION 3 BOUNDARY (Flex 3) */}
-                    <Box
-                        style={{
-                            flex: 3,
-                            backgroundColor: 'rgba(156, 54, 181, 0.03)',
-                            border: '1.5px dashed #cc5de8',
-                            boxSizing: 'border-box',
-                            padding: '4px',
-                        }}
-                    >
-                        <Text fw={700} size="8px" c="grape.7">SEC 3 (3)</Text>
-                    </Box>
-                </Box>
-
-                {/* React Flow Canvas */}
                 <ReactFlow
                     nodes={nodes}
                     edges={edges}

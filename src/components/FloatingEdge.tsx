@@ -1,18 +1,26 @@
-import { useStore, getBezierPath } from '@xyflow/react';
-import type { EdgeProps, InternalNode } from '@xyflow/react';
+import {useStore, getBezierPath} from '@xyflow/react';
+import type {EdgeProps, InternalNode} from '@xyflow/react';
 
-function getNodeIntersection(intersectionNode: InternalNode, targetNode: InternalNode) {
+const FIXED_NODE_ID = 'fixed-anchor-node';
+
+function getNodeIntersection(intersectionNode: InternalNode, targetNode: InternalNode, isVerticalTopConnection = false) {
     const w = intersectionNode.measured.width ?? 0;
     const h = intersectionNode.measured.height ?? 0;
     const targetW = targetNode.measured.width ?? 0;
     const targetH = targetNode.measured.height ?? 0;
 
-    // Use live internal position (accounts for real-time CSS transforms during dragging)
     const x = intersectionNode.internals.positionAbsolute.x + w / 2;
     const y = intersectionNode.internals.positionAbsolute.y + h / 2;
 
     const targetX = targetNode.internals.positionAbsolute.x + targetW / 2;
     const targetY = targetNode.internals.positionAbsolute.y + targetH / 2;
+
+    if (isVerticalTopConnection && intersectionNode.id === FIXED_NODE_ID) {
+        return {
+            x,
+            y: targetY < y ? y - h / 2 : y + h / 2
+        };
+    }
 
     const dx = targetX - x;
     const dy = targetY - y;
@@ -35,15 +43,21 @@ function getNodeIntersection(intersectionNode: InternalNode, targetNode: Interna
         edgeX = edgeY * (dx / dy);
     }
 
-    return { x: x + edgeX, y: y + edgeY };
+    return {x: x + edgeX, y: y + edgeY};
 }
 
-export function FloatingEdge({ id, source, target, style, markerEnd, animated }: EdgeProps) {
-    // Subscribe to live changes in node positions directly from the store
+export function FloatingEdge({id, source, target, style, markerEnd, animated}: EdgeProps) {
     const sourceNode = useStore((s) => s.nodeLookup.get(source));
     const targetNode = useStore((s) => s.nodeLookup.get(target));
 
-    // Re-render edge on position absolute updates
+    const isVerticalLayout = useStore((s) => {
+        const anchor = s.nodeLookup.get(FIXED_NODE_ID);
+        if (!anchor) return false;
+        const centerNode = s.nodeLookup.get('1');
+        if (!centerNode) return false;
+        return anchor.internals.positionAbsolute.y > centerNode.internals.positionAbsolute.y + 150;
+    });
+
     useStore((s) => {
         const sNode = s.nodeLookup.get(source);
         const tNode = s.nodeLookup.get(target);
@@ -61,8 +75,9 @@ export function FloatingEdge({ id, source, target, style, markerEnd, animated }:
         return null;
     }
 
-    const sourceIntersection = getNodeIntersection(sourceNode, targetNode);
-    const targetIntersection = getNodeIntersection(targetNode, sourceNode);
+    const sourceIntersection = getNodeIntersection(sourceNode, targetNode, isVerticalLayout);
+    const targetIntersection = getNodeIntersection(targetNode, sourceNode, isVerticalLayout);
+
 
     const [edgePath] = getBezierPath({
         sourceX: sourceIntersection.x,
