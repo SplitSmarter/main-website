@@ -1,16 +1,17 @@
 import type {Node, Edge} from '@xyflow/react';
+// Do not import CSS modules here since it's now a global CSS file
 
 const CENTER_X = 350;
 const CENTER_Y = 200;
 const RADIUS = 180;
 
 export const outerNodesConfig = [
-    {id: '2', label: '⚡ Client Store', angle: 0},
-    {id: '3', label: '🌐 REST API', angle: 60},
-    {id: '4', label: '💾 Database Engine', angle: 120},
-    {id: '5', label: '🔒 Auth Provider', angle: 180},
-    {id: '6', label: '📊 Metrics Collector', angle: 240},
-    {id: '7', label: '🔔 Notification Service', angle: 300},
+    {id: '2', label: '📊 Smart Ledger & Tracking', angle: 0, theme: 'cyan'},
+    {id: '3', label: '🤝 Debt Reconciliation', angle: 60, theme: 'emerald'},
+    {id: '4', label: '👤 Placeholder Profiles', angle: 120, theme: 'sunset'},
+    {id: '5', label: '💸 UPI & Deep-Link Payments', angle: 180, theme: 'amethyst'},
+    {id: '6', label: '💱 Multi-Currency Engine', angle: 240, theme: 'ruby'},
+    {id: '7', label: '📍 Merchant Analytics', angle: 300, theme: 'midnight'},
 ];
 
 const calculatePosition = (angleInDegrees: number) => {
@@ -23,7 +24,7 @@ const calculatePosition = (angleInDegrees: number) => {
 
 const centralNode: Node = {
     id: '1',
-    data: {label: '🌟 Central Hub'},
+    data: {label: '🌟 Split Smart Core'},
     position: {x: CENTER_X, y: CENTER_Y},
     style: {
         background: '#1c7ed6',
@@ -36,23 +37,16 @@ const centralNode: Node = {
     },
 };
 
-const peripheralNodes: Node[] = outerNodesConfig.map((item: { id: string; label: string; angle: number }) => ({
+const peripheralNodes: Node[] = outerNodesConfig.map((item) => ({
     id: item.id,
     data: {label: item.label},
     position: calculatePosition(item.angle),
-    style: {
-        background: 'var(--app-surface, #ffffff)',
-        color: 'var(--app-text-main, #212529)',
-        border: '1px solid var(--app-border, #dee2e6)',
-        borderRadius: '8px',
-        padding: '8px 14px',
-        fontSize: '13px',
-    },
+    className: `satelliteNodeCard ${item.theme}`,
 }));
 
 export const initialNodes: Node[] = [centralNode, ...peripheralNodes];
 
-export const initialEdges: Edge[] = outerNodesConfig.map((item: { id: string; label: string; angle: number }) => ({
+export const initialEdges: Edge[] = outerNodesConfig.map((item) => ({
     id: `e1-${item.id}`,
     source: '1',
     target: item.id,

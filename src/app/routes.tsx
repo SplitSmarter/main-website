@@ -2,8 +2,8 @@ import { createBrowserRouter } from 'react-router';
 import { RootLayout } from './layouts/RootLayout';
 import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
 import { AnalyticsPage } from '../features/analytics/pages/AnalyticsPage';
-import { WorkflowPage } from '../features/workflow/pages/WorkflowPage';
-import {WorkflowMobilePage} from "@/features/workflow/pages/WorkflowMobilePage.tsx";
+import { WorkflowPage } from '@/features/dashboard/pages/WorkflowPage';
+import {WorkflowMobilePage} from "@/features/dashboard/pages/WorkflowMobilePage.tsx";
 
 export const router = createBrowserRouter([
   {

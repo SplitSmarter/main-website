@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import { AppProvider } from './app/providers/AppProvider';
 import { router } from './app/routes';
-
+import '@/index.css';
+import '@/features/workflow/SatelliteNodeCard.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 

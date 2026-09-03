@@ -15,8 +15,11 @@ import {
 import type {NodeTypes, Connection, Node, NodeChange} from '@xyflow/react';
 import {IconRotateDot} from '@tabler/icons-react';
 import '@xyflow/react/dist/style.css';
-
-import {initialNodes as baseNodes, initialEdges as baseEdges, outerNodesConfig} from '../config/flowData';
+import {
+    initialNodes as baseNodes,
+    initialEdges as baseEdges,
+    outerNodesConfig
+} from '@/features/workflow/config/flowData';
 import {FloatingEdge} from '@/components/FloatingEdge.tsx';
 import {MobileAnchorNode} from "@/components/MobileAnchorNode.tsx";
 
@@ -460,13 +463,13 @@ export function WorkflowInner() {
                     nodeOrigin={[0.5, 0.5]}
                     viewport={{x: 0, y: 0, zoom: 1}}
                     fitView={false}
-                    panOnDrag={false}
-                    panOnScroll={false}
-                    zoomOnScroll={false}
-                    zoomOnPinch={false}
-                    zoomOnDoubleClick={false}
-                    selectionOnDrag={false}
-                    preventScrolling={true}
+                    panOnDrag={false}              // Disables background panning
+                    nodesConnectable={false}       // Disables connection handles on nodes
+                    zoomOnScroll={false}           // Disables zooming via mouse wheel
+                    zoomOnPinch={false}            // Disables pinch-to-zoom on mobile/trackpad
+                    zoomOnDoubleClick={false}      // Disables double-click zoom
+                    selectionOnDrag={false}        // Disables click-and-drag selection box
+                    preventScrolling={false}       // Crucial: Allows normal page scrolling when hovering over the flow
                     autoPanOnNodeDrag={false}
                     autoPanOnConnect={false}
                     minZoom={1}
