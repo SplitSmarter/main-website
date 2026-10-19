@@ -36,6 +36,14 @@ const FIXED_NODE_ID = 'fixed-anchor-node';
 const DYNAMIC_EDGE_ID = 'edge-fixed-to-active';
 const ANIMATION_DURATION = 500;
 const BREAKPOINT_WIDTH = 850;
+const THEME_COLORS: Record<string, string> = {
+    cyan: '#0284c7',
+    emerald: '#059669',
+    sunset: '#ea580c',
+    amethyst: '#7c3aed',
+    ruby: '#e11d48',
+    midnight: '#4b5563',
+};
 
 function cubicBezierEase(t: number): number {
     const p1 = 0.25;
@@ -50,12 +58,12 @@ export function WorkflowInner() {
     const currentWidth = containerWidth || 900;
     const isVertical = currentWidth < BREAKPOINT_WIDTH;
 
-    const sec1Width = isVertical ? currentWidth : currentWidth * (4 / 10);
-    const spacerWidth = isVertical ? 0 : currentWidth * (0.5 / 10);
-    const sec2Width = isVertical ? currentWidth : currentWidth * (2.5 / 10);
+    // Dynamically calculate section dimensions
+    const sec1Width = isVertical ? currentWidth : currentWidth * 0.5;
+    const sec2Width = isVertical ? currentWidth : currentWidth * 0.5;
 
-    const sec1Height = isVertical ? currentHeight * 0.55 : currentHeight;
-    const sec2Height = isVertical ? currentHeight * 0.45 : currentHeight;
+    const sec1Height = isVertical ? currentHeight * 0.5 : currentHeight;
+    const sec2Height = isVertical ? currentHeight * 0.5 : currentHeight;
 
     const sec1Center = {
         x: sec1Width / 2,
@@ -64,18 +72,17 @@ export function WorkflowInner() {
 
     const sec2Center = isVertical
         ? {x: sec2Width / 2, y: sec1Height + (sec2Height / 2)}
-        : {x: sec1Width + spacerWidth + (sec2Width / 2), y: currentHeight / 2};
+        : {x: sec1Width + (sec2Width / 2), y: currentHeight / 2};
 
-    const availableHeight = sec1Height - 40;
-
+    // Dynamic radius scaled safely within section bounds (subtracting padding for node dimensions ~120px)
     const computedRadius = Math.min(
-        sec1Width * 0.38,
-        availableHeight * 0.38,
-        160
+        sec1Width * 0.32,
+        sec1Height * 0.32,
+        140
     );
 
-    const dynamicAnchorWidth = Math.min(sec2Width * 0.85, 220);
-    const dynamicAnchorHeight = Math.min(sec2Height * 0.85, 420);
+    const dynamicAnchorWidth = Math.min(sec2Width * 0.8, 260);
+    const dynamicAnchorHeight = Math.min(sec2Height * 0.85, 440);
 
     const initialAnchorNode: Node = {
         id: FIXED_NODE_ID,
@@ -100,7 +107,7 @@ export function WorkflowInner() {
             target: '2',
             type: 'floating',
             animated: true,
-            style: {stroke: '#15aabf', strokeWidth: 3},
+            style: { stroke: THEME_COLORS['cyan'], strokeWidth: 3 },
         },
         ...baseEdges,
     ]);
@@ -110,18 +117,19 @@ export function WorkflowInner() {
     const lastLayoutModeRef = useRef<boolean>(isVertical);
     const lastDimensionsRef = useRef({w: currentWidth, h: currentHeight});
 
+    // Strict boundary tracking to prevent nodes from getting clipped or going outside canvas
     const boundsRef = useRef({
         center: {
-            minX: sec1Center.x - 40,
-            maxX: sec1Center.x + 40,
-            minY: sec1Center.y - 40,
-            maxY: sec1Center.y + 40,
+            minX: sec1Center.x - 20,
+            maxX: sec1Center.x + 20,
+            minY: sec1Center.y - 20,
+            maxY: sec1Center.y + 20,
         },
         satellite: {
-            minX: 10,
-            maxX: sec1Width - 10,
-            minY: 20,
-            maxY: sec1Height - 20,
+            minX: 70,
+            maxX: sec1Width - 70,
+            minY: 50,
+            maxY: sec1Height - 50,
         },
         anchorPos: sec2Center
     });
@@ -129,22 +137,21 @@ export function WorkflowInner() {
     useEffect(() => {
         boundsRef.current = {
             center: {
-                minX: sec1Center.x - 40,
-                maxX: sec1Center.x + 40,
-                minY: sec1Center.y - 40,
-                maxY: sec1Center.y + 40
+                minX: sec1Center.x - 20,
+                maxX: sec1Center.x + 20,
+                minY: sec1Center.y - 20,
+                maxY: sec1Center.y + 20
             },
             satellite: {
-                minX: 10,
-                maxX: sec1Width - 10,
-                minY: 20,
-                maxY: sec1Height - 20
+                minX: 70,
+                maxX: sec1Width - 70,
+                minY: 50,
+                maxY: sec1Height - 50
             },
             anchorPos: sec2Center
         };
     }, [sec1Center.x, sec1Center.y, sec1Width, sec1Height, sec2Center.x, sec2Center.y]);
 
-    // Inside WorkflowInner.tsx, update your resize useEffect:
     useEffect(() => {
         if (!containerWidth || !containerHeight) return;
 
@@ -196,13 +203,10 @@ export function WorkflowInner() {
             });
         });
 
-        // FIX: When switching layout modes, update the dynamic edge target to match the correct node orientation
         if (modeChanged) {
             setEdges((eds) =>
                 eds.map((edge) => {
                     if (edge.id === DYNAMIC_EDGE_ID) {
-                        // In vertical mode, point to the top-most node or center node depending on your layout design.
-                        // If your vertical layout stack puts a specific node on top, target that ID (e.g., CENTER_NODE_ID or the top outer node).
                         const newTarget = isVertical ? CENTER_NODE_ID : '2';
                         return {...edge, target: newTarget};
                     }
@@ -291,6 +295,8 @@ export function WorkflowInner() {
 
             const clickedConfig = outerNodesConfig.find((item) => item.id === clickedNode.id);
             const activeLabel = clickedConfig ? clickedConfig.label : (clickedNode.data.label as string);
+            const nodeTheme = clickedConfig ? clickedConfig.theme : 'cyan';
+            const activeColor = THEME_COLORS[nodeTheme] || '#15aabf';
 
             setNodes((nds) =>
                 nds.map((n) =>
@@ -309,7 +315,13 @@ export function WorkflowInner() {
 
             setEdges((eds) =>
                 eds.map((edge) =>
-                    edge.id === DYNAMIC_EDGE_ID ? {...edge, target: clickedNode.id} : edge
+                    edge.id === DYNAMIC_EDGE_ID
+                        ? {
+                            ...edge,
+                            target: clickedNode.id,
+                            style: { ...edge.style, stroke: activeColor }
+                        }
+                        : edge
                 )
             );
 
@@ -346,8 +358,6 @@ export function WorkflowInner() {
             if (clickedIndex === -1) return;
 
             const clickedItem = nodePositions[clickedIndex];
-
-            // FIX: If vertical, align the active node to point downwards (Math.PI / 2), otherwise point to the right (0)
             const targetSlotAngle = isVertical ? Math.PI / 2 : 0;
 
             let rotationDelta = targetSlotAngle - clickedItem.angle;
@@ -446,6 +456,8 @@ export function WorkflowInner() {
                     width: '100%',
                     position: 'relative',
                     background: 'transparent',
+                    overflow: 'hidden', // Prevents overflowing visual elements outside box
+                    ['--node-scale' as any]: Math.max(1.1, Math.min(1, currentWidth / 1100)),
                 }}
             >
                 <ReactFlow
@@ -463,13 +475,13 @@ export function WorkflowInner() {
                     nodeOrigin={[0.5, 0.5]}
                     viewport={{x: 0, y: 0, zoom: 1}}
                     fitView={false}
-                    panOnDrag={false}              // Disables background panning
-                    nodesConnectable={false}       // Disables connection handles on nodes
-                    zoomOnScroll={false}           // Disables zooming via mouse wheel
-                    zoomOnPinch={false}            // Disables pinch-to-zoom on mobile/trackpad
-                    zoomOnDoubleClick={false}      // Disables double-click zoom
-                    selectionOnDrag={false}        // Disables click-and-drag selection box
-                    preventScrolling={false}       // Crucial: Allows normal page scrolling when hovering over the flow
+                    panOnDrag={false}
+                    nodesConnectable={false}
+                    zoomOnScroll={false}
+                    zoomOnPinch={false}
+                    zoomOnDoubleClick={false}
+                    selectionOnDrag={false}
+                    preventScrolling={false}
                     autoPanOnNodeDrag={false}
                     autoPanOnConnect={false}
                     minZoom={1}

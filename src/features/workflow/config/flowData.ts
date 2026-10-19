@@ -6,12 +6,12 @@ const CENTER_Y = 200;
 const RADIUS = 180;
 
 export const outerNodesConfig = [
-    {id: '2', label: '📊 Smart Ledger & Tracking', angle: 0, theme: 'cyan'},
-    {id: '3', label: '🤝 Debt Reconciliation', angle: 60, theme: 'emerald'},
-    {id: '4', label: '👤 Placeholder Profiles', angle: 120, theme: 'sunset'},
-    {id: '5', label: '💸 UPI & Deep-Link Payments', angle: 180, theme: 'amethyst'},
-    {id: '6', label: '💱 Multi-Currency Engine', angle: 240, theme: 'ruby'},
-    {id: '7', label: '📍 Merchant Analytics', angle: 300, theme: 'midnight'},
+    {id: '2', label: '📊 Smart Ledger', angle: 0, theme: 'cyan'},
+    {id: '3', label: '🤝 Debt Sync', angle: 60, theme: 'emerald'},
+    {id: '4', label: '👤 User Profiles', angle: 120, theme: 'sunset'},
+    {id: '5', label: '💸 UPI Payments', angle: 180, theme: 'amethyst'},
+    {id: '6', label: '💱 Multi-Currency', angle: 240, theme: 'ruby'},
+    {id: '7', label: '📍 Analytics', angle: 300, theme: 'midnight'},
 ];
 
 const calculatePosition = (angleInDegrees: number) => {
