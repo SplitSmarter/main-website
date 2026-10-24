@@ -1,5 +1,6 @@
 import {useCallback, useRef, useEffect} from 'react';
-import {Title, Text, Stack, Button, Group, Box} from '@mantine/core';
+import {MantineProvider, Title, Text, Stack, Button, Group, Box} from '@mantine/core';
+import {appTheme, resolver} from '@/config/theme';
 import {useElementSize} from '@mantine/hooks';
 import {
     ReactFlow,
@@ -497,8 +498,12 @@ export function WorkflowInner() {
 
 export function WorkflowPage() {
     return (
-        <ReactFlowProvider>
-            <WorkflowInner/>
-        </ReactFlowProvider>
+        <MantineProvider theme={appTheme} cssVariablesResolver={resolver} forceColorScheme="light">
+            <div style={{minHeight: '100vh', background: '#f8f9fa', padding: '16px 20px 24px'}}>
+                <ReactFlowProvider>
+                    <WorkflowInner/>
+                </ReactFlowProvider>
+            </div>
+        </MantineProvider>
     );
 }

@@ -1,19 +1,12 @@
 import { createBrowserRouter } from 'react-router';
-import { RootLayout } from './layouts/RootLayout';
-import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
-import { AnalyticsPage } from '../features/analytics/pages/AnalyticsPage';
 import { WorkflowPage } from '@/features/dashboard/pages/WorkflowPage';
-import {WorkflowMobilePage} from "@/features/dashboard/pages/WorkflowMobilePage.tsx";
+import { HomePage } from '@/features/home/pages/HomePage';
+import { StartPage } from '@/features/get-started/pages/StartPage';
+import { SpatialPreviewPage } from '@/features/spatial-preview/pages/SpatialPreviewPage';
 
 export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootLayout />,
-    children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'analytics', element: <AnalyticsPage /> },
-      { path: 'workflow', element: <WorkflowPage /> },
-      { path: 'mobile', element: <WorkflowMobilePage /> },
-    ],
-  },
+  { path: '/', element: <HomePage /> },
+  { path: '/dev/spatial', element: <SpatialPreviewPage /> },
+  { path: '/dev/start', element: <StartPage /> },
+  { path: '/dev/workflow', element: <WorkflowPage /> },
 ]);

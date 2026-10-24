@@ -15,7 +15,7 @@
     "@mantine/notifications": "^9.6.0",
     "@tabler/icons-react": "^3.46.0",
     "@tanstack/react-query": "^5.102.8",
-    "@xyflow/react": "^12.11.6",
+    "@xyflow/react": "^12.12.0",
     "postcss": "^8.5.26",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
