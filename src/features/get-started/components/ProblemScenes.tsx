@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import {
   IconArrowsExchange,
-  IconCheck,
   IconBasket,
   IconBuildingStore,
   IconSearch,
@@ -23,6 +21,7 @@ import {
 } from '@tabler/icons-react';
 import { problemScenes } from '@/content/product';
 import styles from '../StartPage.module.css';
+import { MerchantStrip } from './MerchantStrip';
 
 const dishIcons = {
   dish: IconToolsKitchen2,
@@ -54,122 +53,6 @@ function SceneCopy({ title, body }: { title: string; body: string }) {
   );
 }
 
-type CapturePhase = 'scan' | 'type' | 'scanning' | 'logged' | 'saved';
-
-const captureOrder: CapturePhase[] = ['scan', 'type', 'scanning', 'logged', 'saved'];
-
-function usePrefersReducedMotion() {
-  const [reduce, setReduce] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const apply = () => setReduce(media.matches);
-    apply();
-    media.addEventListener('change', apply);
-    return () => media.removeEventListener('change', apply);
-  }, []);
-
-  return reduce;
-}
-
-function CapturePanel() {
-  const capture = problemScenes.capture;
-  const reduce = usePrefersReducedMotion();
-  const [phase, setPhase] = useState<CapturePhase>('scan');
-  const [typed, setTyped] = useState(0);
-  const logged = phase === 'logged' || phase === 'saved';
-
-  useEffect(() => {
-    if (reduce) return;
-    const hold = phase === 'type' ? capture.note.length * 38 + 520 : phase === 'scan' ? 1700 : phase === 'scanning' ? 1300 : phase === 'logged' ? 2100 : 1500;
-    const timer = window.setTimeout(() => {
-      const next = captureOrder[(captureOrder.indexOf(phase) + 1) % captureOrder.length];
-      if (next === 'type') setTyped(0);
-      setPhase(next);
-    }, hold);
-    return () => window.clearTimeout(timer);
-  }, [phase, reduce, capture.note.length]);
-
-  useEffect(() => {
-    if (reduce || phase !== 'type') return;
-    const timer = window.setInterval(() => {
-      setTyped((count) => (count >= capture.note.length ? count : count + 1));
-    }, 38);
-    return () => window.clearInterval(timer);
-  }, [phase, reduce, capture.note]);
-
-  const note = phase === 'scan' && !reduce
-    ? ''
-    : phase === 'type' && !reduce
-      ? capture.note.slice(0, typed)
-      : capture.note;
-  const showLogged = reduce || logged;
-
-  return (
-    <div className={styles.captureStage}>
-      <div className={showLogged ? styles.captureHidden : styles.captureShown} aria-hidden={showLogged}>
-        <header className={styles.panelHead}>
-          <span className={styles.panelIcon}><IconScan size={16} stroke={1.7} /></span>
-          <span>
-            <strong>{capture.heading}</strong>
-            <small>{capture.hint}</small>
-          </span>
-        </header>
-        <div className={styles.noteField}>
-          <span>
-            {note}
-            {phase === 'type' && <i className={styles.caret} />}
-          </span>
-          <IconMicrophone className={phase === 'type' ? styles.micLive : styles.mic} size={18} stroke={1.7} />
-        </div>
-        <p className={styles.parent}>{capture.photos}</p>
-        <div className={styles.captureRow}>
-          <span className={`${styles.captureTile} ${styles.billTile} ${phase === 'scan' ? styles.billLive : ''}`}>
-            {phase === 'scan' && <i className={styles.scanLine} />}
-            <IconReceipt size={22} stroke={1.6} />
-            {capture.bill}
-          </span>
-          <span className={styles.captureTile}>
-            <IconCamera size={22} stroke={1.6} />
-            {capture.camera}
-          </span>
-          <span className={styles.captureTile}>
-            <IconPhoto size={22} stroke={1.6} />
-            {capture.library}
-          </span>
-        </div>
-        <div className={styles.scanCta}>
-          <IconScan size={18} stroke={1.8} />
-          {phase === 'scanning' ? capture.scanning : capture.action}
-        </div>
-      </div>
-      <div className={showLogged ? styles.captureShown : styles.captureHidden} aria-hidden={!showLogged}>
-        <header className={styles.panelHead}>
-          <span className={styles.panelIcon}><IconReceipt size={16} stroke={1.7} /></span>
-          <span>
-            <strong>{capture.loggedTitle}</strong>
-            <small>{capture.loggedDetail}</small>
-          </span>
-          <em className={phase === 'saved' || reduce ? styles.settled : undefined}>
-            {phase === 'saved' || reduce ? <IconCheck size={13} stroke={2} /> : null}
-            {phase === 'saved' || reduce ? capture.saved : capture.review}
-          </em>
-        </header>
-        <p className={styles.loggedNote}>{capture.note}</p>
-        <p className={styles.total}>
-          <span>Amount</span>
-          <strong>{capture.loggedAmount}</strong>
-        </p>
-        <div className={`${styles.savedMap} ${phase === 'saved' || reduce ? styles.savedMapOn : ''}`}>
-          <span className={styles.pin} aria-hidden><IconMapPin size={18} stroke={1.8} /></span>
-          <strong>{capture.loggedTitle}</strong>
-          <small>{capture.loggedPlace}</small>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function ProblemScenes() {
   const { capture, ledger, debt, receipt, merchants, budget, trip, trail } = problemScenes;
 
@@ -178,8 +61,61 @@ export function ProblemScenes() {
       <section className={styles.scene} id={capture.id}>
         <SceneCopy title={capture.title} body={capture.body} />
         <div className={styles.panel}>
-          <CapturePanel />
+          <header className={styles.panelHead}>
+            <span className={styles.panelIcon}><IconScan size={16} stroke={1.7} /></span>
+            <span>
+              <strong>{capture.heading}</strong>
+              <small>{capture.hint}</small>
+            </span>
+          </header>
+          <div className={styles.noteField}>
+            <span>{capture.note}</span>
+            <IconMicrophone className={styles.mic} size={18} stroke={1.7} />
+          </div>
+          <p className={styles.parent}>{capture.photos}</p>
+          <div className={styles.captureRow}>
+            <span className={`${styles.captureTile} ${styles.billTile}`}>
+              <IconReceipt size={22} stroke={1.6} />
+              {capture.bill}
+            </span>
+            <span className={styles.captureTile}>
+              <IconCamera size={22} stroke={1.6} />
+              {capture.camera}
+            </span>
+            <span className={styles.captureTile}>
+              <IconPhoto size={22} stroke={1.6} />
+              {capture.library}
+            </span>
+          </div>
+          <div className={styles.scanCta}>
+            <IconScan size={18} stroke={1.8} />
+            {capture.action}
+          </div>
         </div>
+      </section>
+
+      <section className={styles.scene} id={merchants.id}>
+        <SceneCopy title={merchants.title} body={merchants.body} />
+        <div className={styles.panel}>
+          <header className={styles.panelHead}>
+            <span className={styles.panelIcon}><IconSearch size={16} stroke={1.7} /></span>
+            <strong>Merchant catalog</strong>
+            <em>Search</em>
+          </header>
+          <ul className={styles.ledger}>
+            {merchants.rows.map((row) => (
+              <li key={row.name}>
+                <span className={styles.panelIcon}><IconBuildingStore size={16} stroke={1.7} /></span>
+                <span>
+                  <strong>{row.name}</strong>
+                  <small>{row.branch}</small>
+                </span>
+                <em>{row.amount}</em>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <MerchantStrip />
       </section>
 
       <section className={styles.scene} id={ledger.id}>
@@ -188,7 +124,6 @@ export function ProblemScenes() {
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconReceipt size={16} stroke={1.7} /></span>
             <strong>Saturday dinner</strong>
-            <em>{ledger.sample}</em>
           </header>
           <ul className={styles.items}>
             {ledger.items.map((item) => {
@@ -259,7 +194,6 @@ export function ProblemScenes() {
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconReceipt size={16} stroke={1.7} /></span>
             <strong>Market run</strong>
-            <em>{receipt.sample}</em>
           </header>
           <div className={styles.tree}>
             {receipt.groups.map((group) => (
@@ -271,7 +205,10 @@ export function ProblemScenes() {
                     return (
                       <li key={line.title}>
                         <span className={styles.panelIcon}><LineIcon size={16} stroke={1.7} /></span>
-                        <strong>{line.title}</strong>
+                        <span>
+                          <strong>{line.title}</strong>
+                          <small>Related to {group.parent}</small>
+                        </span>
                         <em>{line.amount}</em>
                       </li>
                     );
@@ -284,29 +221,6 @@ export function ProblemScenes() {
             <span>{receipt.total.label}</span>
             <strong>{receipt.total.amount}</strong>
           </p>
-        </div>
-      </section>
-
-      <section className={styles.scene} id={merchants.id}>
-        <SceneCopy title={merchants.title} body={merchants.body} />
-        <div className={styles.panel}>
-          <header className={styles.panelHead}>
-            <span className={styles.panelIcon}><IconSearch size={16} stroke={1.7} /></span>
-            <strong>Merchant catalog</strong>
-            <em>Search</em>
-          </header>
-          <ul className={styles.ledger}>
-            {merchants.rows.map((row) => (
-              <li key={row.name}>
-                <span className={styles.panelIcon}><IconBuildingStore size={16} stroke={1.7} /></span>
-                <span>
-                  <strong>{row.name}</strong>
-                  <small>{row.branch}</small>
-                </span>
-                <em>{row.amount}</em>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -369,7 +283,6 @@ export function ProblemScenes() {
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconRoute size={16} stroke={1.7} /></span>
             <strong>{trail.name}</strong>
-            <em>{trail.sample}</em>
           </header>
           <ol className={styles.trail}>
             {trail.stops.map((stop) => (

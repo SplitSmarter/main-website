@@ -2,7 +2,6 @@ import { ProblemScenes } from '../components/ProblemScenes';
 import { PhoneMock } from '../components/PhoneMock';
 import { SiteClose } from '../components/SiteClose';
 import { SpendMap } from '../components/SpendMap';
-import { Voices } from '../components/Voices';
 import { ProofRow, StartCopy } from '../components/StartCopy';
 import { StartNav } from '../components/StartNav';
 import styles from '../StartPage.module.css';
@@ -25,24 +24,33 @@ ensureFonts();
 export function StartPage() {
   return (
     <main className={styles.page}>
-      <div className={styles.frame}>
-        <p className={styles.watermark} aria-hidden>Split</p>
-        <StartNav />
-        <div className={styles.layout}>
-          <StartCopy />
-          <PhoneMock />
+      <div className={styles.ground} aria-hidden>
+        <div className={styles.groundWords}>
+          {['Track', 'settle', 'budget', 'trips', 'analytics', 'merchants', 'places'].map((word) => (
+            <p key={word} className={styles.watermark}>{word}</p>
+          ))}
         </div>
       </div>
-      <section className={styles.proofBand} aria-label="Product facts">
-        <ProofRow />
-      </section>
-      <div className={styles.below}>
-        <ProblemScenes />
-      </div>
-      <SpendMap />
-      <Voices />
-      <div className={styles.below}>
-        <SiteClose />
+      <div className={styles.surface}>
+        <div className={styles.frame}>
+          <StartNav />
+          <div className={styles.layout}>
+            <StartCopy />
+            <PhoneMock />
+          </div>
+        </div>
+        <div className={styles.rest}>
+          <section className={styles.proofBand} aria-label="Product facts">
+            <ProofRow />
+          </section>
+          <div className={styles.below}>
+            <ProblemScenes />
+          </div>
+          <SpendMap />
+          <div className={styles.below}>
+            <SiteClose />
+          </div>
+        </div>
       </div>
     </main>
   );

@@ -30,7 +30,6 @@ export function Voices() {
   return (
     <section className={styles.voices} id={voices.id} aria-label={voices.title}>
       <div className={styles.voiceCopy}>
-        <p className={styles.voiceSample}>{voices.sample}</p>
         <h2>{voices.title}</h2>
       </div>
       <div className={styles.marquee}>

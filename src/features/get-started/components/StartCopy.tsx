@@ -1,11 +1,11 @@
-import { IconArrowRight, IconCoins, IconLanguage, IconStar } from '@tabler/icons-react';
+import { IconArrowRight, IconCoins, IconLanguage, IconTag } from '@tabler/icons-react';
 import { getStarted, proof } from '@/content/product';
 import styles from '../StartPage.module.css';
 
 const proofIcons = {
   language: IconLanguage,
   currency: IconCoins,
-  review: IconStar,
+  price: IconTag,
 };
 
 export function StartCopy() {

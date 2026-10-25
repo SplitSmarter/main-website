@@ -1,32 +1,23 @@
 export const brand = 'Split Smarter';
 
-export const previewNav = [
-  { label: 'Wallet', href: '#ledger' },
-  { label: 'Groups', href: '#groups' },
-  { label: 'Places', href: '#places' },
-  { label: 'Budgets', href: '#budget' },
-] as const;
-
 export const startNav = [
   { label: 'Add', href: '#capture' },
   { label: 'Ledger', href: '#ledger' },
-  { label: 'Debt', href: '#debt' },
   { label: 'Budget', href: '#budget' },
-  { label: 'Trail', href: '#trail' },
   { label: 'Map', href: '#map' },
 ] as const;
 
 export const getStarted = {
   title: 'Get started',
-  headline: 'Split every expense.',
-  lede: 'Who paid an expense is not who shares it. The difference is what each person is owed.',
-  cta: 'Get started',
+  headline: 'Track every expense.',
+  lede: 'Built for one person and the groups they spend with, the way the money actually moves.',
+  cta: 'Start for free',
 };
 
 export const proof = [
   { value: '4', label: 'Languages supported', icon: 'language' as const },
   { value: '156', label: 'Currencies supported', icon: 'currency' as const },
-  { value: '5.0', label: 'Rated', icon: 'review' as const },
+  { value: '$0', label: 'Start for free', icon: 'price' as const },
 ];
 
 export const problemScenes = {
@@ -36,13 +27,17 @@ export const problemScenes = {
     body: 'Add a photo of the bill, a written note, or a note you dictate. A photo and a note can go together. The expense is filled in for you to review, then save.',
     heading: 'Scan receipt',
     hint: 'Dictate a note, add a photo, or both.',
-    note: 'Dinner for four at Cafe Lumen',
+    note: 'Goa trip. Sea bass for me and Anika.',
+    trip: 'Goa trip',
     photos: 'Photos',
     bill: 'Bill',
     camera: 'Camera',
     library: 'Library',
     action: 'Scan',
     scanning: 'Scanning…',
+    reading: 'Parsing this expense',
+    readingDetail: 'Parsing the receipt into this expense.',
+    thoughts: ['Four people on the Goa trip', 'Sea bass shared by you and Anika', 'Converting €18.40 to your profile currency'],
     review: 'Review',
     saved: 'Saved',
     loggedTitle: 'Cafe Lumen',
@@ -52,17 +47,16 @@ export const problemScenes = {
   },
   ledger: {
     id: 'ledger',
-    sample: 'Sample',
     title: 'Who paid is not the share.',
     body: 'Split by item. One item can be shared between several people. Net is what someone paid minus their share.',
-    paid: 'Maya · $186.20',
+    paid: 'Anika · $186.20',
     items: [
       {
         title: 'Sea bass',
         amount: '$64.00',
         icon: 'dish' as const,
         shared: [
-          { person: 'Maya', initial: 'M' },
+          { person: 'Anika', initial: 'A' },
           { person: 'You', initial: 'Y' },
         ],
       },
@@ -86,19 +80,18 @@ export const problemScenes = {
       title: 'Saturday dinner',
       amount: '$186.20',
       shared: [
-        { person: 'Maya', initial: 'M' },
+        { person: 'Anika', initial: 'A' },
         { person: 'You', initial: 'Y' },
         { person: 'Jonah', initial: 'J' },
         { person: 'Priya', initial: 'P' },
       ],
     },
-    transfer: { kind: 'Transfer', title: 'You to Maya', detail: 'Person to person', amount: '$46.55' },
+    transfer: { kind: 'Transfer', title: 'You to Anika', detail: 'Person to person', amount: '$46.55' },
   },
   receipt: {
     id: 'receipt',
-    sample: 'Sample',
     title: 'One receipt, more than one category.',
-    body: 'Each line keeps its own category, nested under a parent. A parent also covers the categories beneath it.',
+    body: 'Groceries and Produce stay under Food. Household stays under Home. A parent covers those related categories, not a category chosen at random.',
     groups: [
       {
         parent: 'Food',
@@ -120,6 +113,7 @@ export const problemScenes = {
     id: 'merchants',
     title: 'The same shop, every visit.',
     body: 'Search a large merchant catalog, or add your own. Spend at one merchant stays together, and a branch is the place that payment went.',
+    strip: 'Supports the majority of merchants',
     rows: [
       { name: 'Mercado da Ribeira', branch: 'Downtown', amount: '$86.00' },
       { name: 'Cafe Lumen', branch: 'Harbor', amount: '$18.40' },
@@ -135,7 +129,7 @@ export const problemScenes = {
     who: 'Shared',
     level: '80%',
     people: [
-      { person: 'Maya', initial: 'M' },
+      { person: 'Anika', initial: 'A' },
       { person: 'You', initial: 'Y' },
     ],
     filters: ['Categories', 'Places', 'Merchants', 'Memories'],
@@ -149,7 +143,6 @@ export const problemScenes = {
   },
   trail: {
     id: 'trail',
-    sample: 'Sample',
     title: 'The trip leaves a trail.',
     body: 'Save the trip, and keep each charge in its own currency. The map joins the places in the order you visited. The same spend breaks down by time, category, people, and what is still open.',
     name: 'Lisbon weekend',
@@ -165,12 +158,11 @@ export const problemScenes = {
 
 export const voices = {
   id: 'voices',
-  sample: 'Sample',
   title: 'Hear from the people.',
   reviews: [
     {
-      name: 'Maya',
-      initial: 'M',
+      name: 'Anika',
+      initial: 'A',
       stars: 5,
       quote: 'Each dish had its own people. The net was clear before we left the table.',
     },
@@ -187,8 +179,8 @@ export const voices = {
       quote: 'The weekend stayed one memory, and the map drew the trail in the order we went.',
     },
     {
-      name: 'Maya',
-      initial: 'M',
+      name: 'Anika',
+      initial: 'A',
       stars: 5,
       quote: 'I dictated the note, checked the draft, and saved the expense.',
     },
@@ -213,132 +205,16 @@ export const spendMap = {
 };
 
 export const siteClose = {
+  guideTitle: 'Guide',
+  privacyTitle: 'Privacy',
   privacy: 'You control who can find you and invite you.',
-  guide: 'User guide',
-};
-
-export const hero = {
-  eyebrow: 'Spending, pinned to the place',
-  title: 'See every expense.',
-  accent: 'Split it with the group.',
-  lede:
-    'The wallet shows what you spent. A group holds the expenses and transfers. The map pins each charge to the place it happened.',
-  cta: 'See the sample',
-  ctaHref: '#ledger',
-};
-
-export const ledgerCard = {
-  title: 'Recent expenses',
-  detail: 'Sample group · the last few days.',
-  badge: 'Sample',
-  add: 'Add an expense',
-};
-
-export const sampleExpenses = [
-  {
-    title: 'Morning coffee',
-    detail: 'Cafe Lumen · Downtown',
-    amount: '$18.40',
-    status: 'Settled' as const,
-    icon: 'coffee' as const,
-  },
-  {
-    title: 'Airport ride',
-    detail: 'North line · Station',
-    amount: '$64.00',
-    status: 'You owe' as const,
-    icon: 'car' as const,
-  },
-  {
-    title: 'Loft dinner',
-    detail: 'Harbor table · Waterfront',
-    amount: '$186.20',
-    status: 'Settled' as const,
-    icon: 'home' as const,
-  },
-];
-
-export const spendSummary = {
-  title: 'Spent this month',
-  amount: '$4,280',
-  delta: 'Sample · +12% from last month',
-  from: 'Apr',
-  to: 'Jul',
-  bars: [46, 62, 38, 74, 52, 68, 96, 78, 110, 72, 88, 124],
-};
-
-export const balance = {
-  title: 'Your balance',
-  detail: 'Sample group · share of spend already settled.',
-  period: 'This month',
-  percent: '64%',
-  chartLabel: 'Sample balance trend, 64 percent settled',
-};
-
-export const surfaces = {
-  caption: 'What the app keeps in one place',
-  items: ['Expenses', 'Groups', 'Map', 'Budgets', 'Transfers'],
-};
-
-export const placesSection = {
-  eyebrow: 'Places',
-  title: 'Find the charge',
-  accent: 'where it happened.',
-};
-
-export const placeStories = [
-  {
-    title: 'Scan the receipt',
-    accent: 'before it is only a photo.',
-    body: 'Adding an expense can open the camera. The charge becomes a record the group can see.',
-  },
-  {
-    title: 'Find any charge',
-    accent: 'on the map of places.',
-    body: 'Dinner, the tram, the room. Each one can sit on a place, not only in a list.',
-  },
-  {
-    title: 'A budget for the trip',
-    accent: 'or for the place itself.',
-    body: 'Budgets attach to a group or a place, so the limit lives next to the spending.',
-  },
-];
-
-export const solution = {
-  eyebrow: 'Budgets',
-  title: 'One ledger',
-  accent: 'for every group.',
-  lede:
-    'Who paid, how it was split, and which place it belongs to. Transfers between people sit beside the expenses.',
-};
-
-export const sampleGroup = {
-  name: 'Lisbon weekend',
-  meta: 'Sample group · 4 people',
-  steps: ['Capture', 'Split', 'Place', 'Budget'],
-  activeStep: 'Split',
-  feature: {
-    title: 'Saturday dinner',
-    amount: '$186.20',
-    note: 'Maya paid · split 4 ways',
-  },
-  rows: [
-    { place: 'Mercado da Ribeira', kind: 'Food', amount: '$86.00', who: 'Maya paid' },
-    { place: 'Tram day passes', kind: 'Transit', amount: '$24.00', who: 'You paid' },
-    { place: 'Alfama rooms', kind: 'Stay', amount: '$420.00', who: 'Jonah paid' },
+  privacyLink: { label: 'Who can find you', path: '/en/account/howto-manage-profile-visibility' },
+  guide: [
+    { label: 'User guide', path: '' },
+    { label: 'Expenses', path: '/en/expenses' },
+    { label: 'Budgets', path: '/en/budgets' },
+    { label: 'Places', path: '/en/places' },
+    { label: 'Settle', path: '/en/settlements' },
   ],
-  owed: {
-    label: 'You are owed',
-    amount: '$128.40',
-    note: 'Priya and Jonah still open',
-    bars: [18, 28, 16, 36, 24],
-  },
-  split: {
-    you: 'You',
-    maya: 'Maya',
-    hubTitle: 'Dinner',
-    hubAmount: '$186',
-    jonah: 'Jonah',
-    priya: 'Priya',
-  },
+  start: 'Start for free',
 };
