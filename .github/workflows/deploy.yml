@@ -1,0 +1,16 @@
+name: Deploy
+
+on:
+  push:
+    branches: [dev, qa, test, release, main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    uses: SplitSmarter/ci-cd-workflows/.github/workflows/node-static-deploy.yml@main
+    with:
+      branch_name: ${{ github.ref }}
+      service_name: main-website
+    secrets:
+      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
+      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
