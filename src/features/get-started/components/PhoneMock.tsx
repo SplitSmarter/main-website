@@ -67,12 +67,27 @@ export function PhoneMock() {
   const [brandTyped, setBrandTyped] = useState(0);
   const brandName = 'Split Smarter';
   const showForm = phase === 'scan' || phase === 'type' || phase === 'scanning';
+  const reducedPhases: PhonePhase[] = ['saved', 'trail', 'analytics', 'celebrate'];
+
+  if (reduce && !reducedPhases.includes(phase)) {
+    setPhase('saved');
+  }
+  if ((reduce || phase !== 'saved') && trailPressed) {
+    setTrailPressed(false);
+  }
+  if ((reduce || phase !== 'trail') && analyticsPressed) {
+    setAnalyticsPressed(false);
+  }
+  if (phase !== 'celebrate' && (brandOn || brandTyped !== 0)) {
+    setBrandOn(false);
+    setBrandTyped(0);
+  } else if (phase === 'celebrate' && reduce && (!brandOn || brandTyped !== brandName.length)) {
+    setBrandOn(true);
+    setBrandTyped(brandName.length);
+  }
 
   useEffect(() => {
-    if (reduce) {
-      if (phase !== 'saved' && phase !== 'trail' && phase !== 'analytics' && phase !== 'celebrate') setPhase('saved');
-      return;
-    }
+    if (reduce) return;
     const hold = phase === 'type'
       ? capture.note.length * 36 + 480
       : phase === 'scan'
@@ -112,37 +127,22 @@ export function PhoneMock() {
   }, [phase, reduce, capture.note]);
 
   useEffect(() => {
-    if (reduce || phase !== 'saved') {
-      setTrailPressed(false);
-      return;
-    }
+    if (reduce || phase !== 'saved') return;
     const timer = window.setTimeout(() => setTrailPressed(true), 3400);
     return () => window.clearTimeout(timer);
   }, [phase, reduce]);
 
   useEffect(() => {
-    if (reduce || phase !== 'trail') {
-      setAnalyticsPressed(false);
-      return;
-    }
+    if (reduce || phase !== 'trail') return;
     const timer = window.setTimeout(() => setAnalyticsPressed(true), 2600);
     return () => window.clearTimeout(timer);
   }, [phase, reduce]);
 
   useEffect(() => {
-    if (phase !== 'celebrate') {
-      setBrandOn(false);
-      setBrandTyped(0);
-      return;
-    }
-    if (reduce) {
-      setBrandOn(true);
-      setBrandTyped(brandName.length);
-      return;
-    }
+    if (reduce || phase !== 'celebrate') return;
     const timer = window.setTimeout(() => setBrandOn(true), 500);
     return () => window.clearTimeout(timer);
-  }, [phase, reduce, brandName.length]);
+  }, [phase, reduce]);
 
   useEffect(() => {
     if (reduce || !brandOn || phase !== 'celebrate') return;
