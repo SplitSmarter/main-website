@@ -21,7 +21,11 @@ function guideHref(page: string) {
   }
 }
 
-export function SiteClose() {
+type SiteCloseProps = {
+  onGetStarted: () => void;
+};
+
+export function SiteClose({ onGetStarted }: SiteCloseProps) {
   const year = new Date().getFullYear();
   const privacyHref = guideHref(siteClose.privacyLink.path);
 
@@ -49,7 +53,7 @@ export function SiteClose() {
       </div>
       <div className={styles.closeLegal}>
         <p>© {year} {brand}</p>
-        <a href="#start">{siteClose.start}</a>
+        <button type="button" onClick={onGetStarted}>{siteClose.start}</button>
       </div>
     </footer>
   );

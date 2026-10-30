@@ -4,7 +4,11 @@ import { Link } from 'react-router';
 import { brand, startNav } from '@/content/product';
 import styles from '../StartPage.module.css';
 
-export function StartNav() {
+type StartNavProps = {
+  onGetStarted: () => void;
+};
+
+export function StartNav({ onGetStarted }: StartNavProps) {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const tipId = useId();
@@ -75,7 +79,9 @@ export function StartNav() {
         <IconMenu2 size={20} stroke={1.8} />
         <span className={styles.visuallyHidden}>Open menu</span>
       </button>
-      <a className={styles.login} href="#start">Get started</a>
+      <button type="button" className={styles.login} onClick={onGetStarted}>
+        Get started
+      </button>
       {menuOpen && (
         <div className={styles.drawerBackdrop} onClick={() => setMenuOpen(false)}>
           <aside
@@ -99,9 +105,16 @@ export function StartNav() {
               <strong>Pricing</strong>
               It's free. Track every expense.
             </p>
-            <a className={styles.drawerCta} href="#start" onClick={() => setMenuOpen(false)}>
+            <button
+              type="button"
+              className={styles.drawerCta}
+              onClick={() => {
+                setMenuOpen(false);
+                onGetStarted();
+              }}
+            >
               Start for free
-            </a>
+            </button>
           </aside>
         </div>
       )}

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { NotifyDialog } from '../components/NotifyDialog';
 import { ProblemScenes } from '../components/ProblemScenes';
 import { PhoneMock } from '../components/PhoneMock';
 import { SiteClose } from '../components/SiteClose';
@@ -22,6 +24,9 @@ function ensureFonts() {
 ensureFonts();
 
 export function StartPage() {
+  const [notifyOpen, setNotifyOpen] = useState(false);
+  const openNotify = () => setNotifyOpen(true);
+
   return (
     <main className={styles.page}>
       <div className={styles.ground} aria-hidden>
@@ -33,9 +38,9 @@ export function StartPage() {
       </div>
       <div className={styles.surface}>
         <div className={styles.frame}>
-          <StartNav />
+          <StartNav onGetStarted={openNotify} />
           <div className={styles.layout}>
-            <StartCopy />
+            <StartCopy onGetStarted={openNotify} />
             <PhoneMock />
           </div>
         </div>
@@ -48,10 +53,11 @@ export function StartPage() {
           </div>
           <SpendMap />
           <div className={styles.below}>
-            <SiteClose />
+            <SiteClose onGetStarted={openNotify} />
           </div>
         </div>
       </div>
+      <NotifyDialog open={notifyOpen} onClose={() => setNotifyOpen(false)} />
     </main>
   );
 }
