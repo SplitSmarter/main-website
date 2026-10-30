@@ -8,17 +8,21 @@ const proofIcons = {
   price: IconTag,
 };
 
-export function StartCopy() {
+type StartCopyProps = {
+  onGetStarted: () => void;
+};
+
+export function StartCopy({ onGetStarted }: StartCopyProps) {
   return (
     <section className={styles.copy} id="start">
       <h1>{getStarted.headline}</h1>
       <p>{getStarted.lede}</p>
-      <a className={styles.cta} href="#phone">
+      <button type="button" className={styles.cta} onClick={onGetStarted}>
         {getStarted.cta}
         <span>
           <IconArrowRight size={16} stroke={2.2} />
         </span>
-      </a>
+      </button>
     </section>
   );
 }

@@ -216,8 +216,16 @@
 
 .drawerCta {
   margin-top: auto;
-  text-align: center;
+  padding: 12px 8px;
+  border: 0;
+  border-radius: 12px;
   background: color-mix(in srgb, var(--text) 8%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
 }
 
 .login {
@@ -225,10 +233,12 @@
   padding: 8px 14px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--text) 35%, transparent);
+  background: transparent;
   color: var(--text);
-  text-decoration: none;
+  font: inherit;
   font-size: 14px;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .layout {
@@ -265,11 +275,13 @@
   align-items: center;
   gap: 12px;
   padding: 8px 8px 8px 18px;
+  border: 0;
   border-radius: 999px;
   background: var(--cta);
   color: var(--cta-text);
-  text-decoration: none;
+  font: inherit;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .cta span {
@@ -1996,6 +2008,107 @@ button.phoneRow {
 .closeLegal a {
   color: var(--muted);
   font-size: 13px;
+}
+
+.closeLegal button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.notifyBackdrop {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.notifyDialog {
+  width: min(420px, 100%);
+  padding: 22px;
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--bg) 94%, #1e293b);
+  border: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.notifyHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notifyHead h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.04em;
+}
+
+.notifyHead button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.notifyDialog p {
+  margin: 10px 0 0;
+  color: color-mix(in srgb, var(--text) 82%, transparent);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.notifyForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.notifyForm input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
+  background: color-mix(in srgb, var(--bg) 80%, #000);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+
+.notifyForm button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: var(--cta);
+  color: var(--cta-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.notifyForm button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.notifyDialog .notifyError {
+  color: var(--danger);
 }
 
 .visuallyHidden {
