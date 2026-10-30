@@ -10,8 +10,7 @@ ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 FROM nginx:1.27-alpine
-RUN apk add --no-cache curl \
-    && busybox --list | grep -qx httpd
+RUN apk add --no-cache curl busybox-extras
 COPY deploy/nginx.conf /etc/nginx/conf.d/default.conf
 COPY deploy/notify.cgi /opt/notify-www/cgi-bin/notify
 COPY deploy/notify-entry.sh /notify-entry.sh
