@@ -1,17 +1,11 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { IconX } from '@tabler/icons-react';
-import { env } from '@/config/env';
 import styles from '../StartPage.module.css';
 
 type NotifyDialogProps = {
   open: boolean;
   onClose: () => void;
 };
-
-function notifyUrl() {
-  const base = env.apiUrl.replace(/\/$/, '');
-  return `${base}/public/notify`;
-}
 
 export function NotifyDialog({ open, onClose }: NotifyDialogProps) {
   if (!open) return null;
@@ -51,7 +45,7 @@ function NotifyDialogPanel({ onClose }: { onClose: () => void }) {
     setPending(true);
     setError('');
     try {
-      const response = await fetch(notifyUrl(), {
+      const response = await fetch('/api/public/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contact: value }),
