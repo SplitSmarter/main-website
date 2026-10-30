@@ -2,16 +2,20 @@ import { brand, getStarted, siteClose } from '@/content/product';
 import { env } from '@/config/env';
 import styles from '../StartPage.module.css';
 
+function guideBasePath(pathname: string) {
+  const path = pathname.replace(/\/$/, '');
+  if (path === '' || path === '/' || path === '/en' || path === '/hi' || path === '/zh') return '';
+  return path.replace(/\/(en|hi|zh)$/, '');
+}
+
 function guideHref(page: string) {
   const raw = env.guideUrl.trim();
   if (!raw) return null;
   if (!page) return raw;
+  if (raw.startsWith('/')) return `${guideBasePath(raw)}${page}`;
   try {
     const url = new URL(raw);
-    const path = url.pathname.replace(/\/$/, '');
-    const atRoot = path === '' || path === '/' || path === '/en' || path === '/hi' || path === '/zh';
-    if (!atRoot) return null;
-    return `${url.origin}${page}`;
+    return `${url.origin}${guideBasePath(url.pathname)}${page}`;
   } catch {
     return null;
   }
