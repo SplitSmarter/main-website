@@ -14,6 +14,11 @@ function notifyUrl() {
 }
 
 export function NotifyDialog({ open, onClose }: NotifyDialogProps) {
+  if (!open) return null;
+  return <NotifyDialogPanel onClose={onClose} />;
+}
+
+function NotifyDialogPanel({ onClose }: { onClose: () => void }) {
   const titleId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [contact, setContact] = useState('');
@@ -21,24 +26,12 @@ export function NotifyDialog({ open, onClose }: NotifyDialogProps) {
   const [pending, setPending] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
-
   useEffect(() => {
-    if (open) return;
-    setContact('');
-    setError('');
-    setPending(false);
-    setSaved(false);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const frame = window.requestAnimationFrame(() => inputRef.current?.focus());
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onCloseRef.current();
+      if (event.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', onKey);
     return () => {
@@ -46,9 +39,7 @@ export function NotifyDialog({ open, onClose }: NotifyDialogProps) {
       document.body.style.overflow = previous;
       document.removeEventListener('keydown', onKey);
     };
-  }, [open]);
-
-  if (!open) return null;
+  }, [onClose]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

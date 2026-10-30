@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { NotifyDialog } from '../components/NotifyDialog';
 import { ProblemScenes } from '../components/ProblemScenes';
 import { PhoneMock } from '../components/PhoneMock';
@@ -26,6 +26,7 @@ ensureFonts();
 export function StartPage() {
   const [notifyOpen, setNotifyOpen] = useState(false);
   const openNotify = () => setNotifyOpen(true);
+  const closeNotify = useCallback(() => setNotifyOpen(false), []);
 
   return (
     <main className={styles.page}>
@@ -57,7 +58,7 @@ export function StartPage() {
           </div>
         </div>
       </div>
-      <NotifyDialog open={notifyOpen} onClose={() => setNotifyOpen(false)} />
+      <NotifyDialog open={notifyOpen} onClose={closeNotify} />
     </main>
   );
 }
