@@ -1341,17 +1341,6 @@ button.phoneRow {
   color: var(--muted);
 }
 
-.phoneSpark {
-  position: absolute;
-  right: 16px;
-  bottom: 14px;
-  width: 10px;
-  height: 10px;
-  background: #fff;
-  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
-  pointer-events: none;
-}
-
 .phoneTrailButton {
   display: flex;
   align-items: center;

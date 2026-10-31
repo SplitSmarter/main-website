@@ -440,7 +440,6 @@ export function PhoneMock() {
                       <IconRoute size={16} stroke={1.8} />
                       Trail
                     </button>
-                    <span className={styles.phoneSpark} aria-hidden />
                   </>
                 )}
               </div>
