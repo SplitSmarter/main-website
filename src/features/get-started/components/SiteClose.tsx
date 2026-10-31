@@ -33,7 +33,10 @@ export function SiteClose({ onGetStarted }: SiteCloseProps) {
     <footer className={styles.close}>
       <div className={styles.closeTop}>
         <div className={styles.closeBrandBlock}>
-          <p className={styles.closeBrand}>{brand}</p>
+          <p className={styles.closeBrand}>
+            <img src="/brand/mark-tile-dark.svg" alt="" width={32} height={32} />
+            {brand}
+          </p>
           <p className={styles.closeLede}>{getStarted.lede}</p>
         </div>
         <nav className={styles.closeCol} aria-label={siteClose.guideTitle}>

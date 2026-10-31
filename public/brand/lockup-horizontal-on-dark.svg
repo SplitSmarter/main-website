@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 32">
+  <rect width="250" height="32" fill="#07090e"/>
+  <rect width="32" height="32" rx="8" fill="#12161f" stroke="#38bdf8" stroke-width="0.55"/>
+  <path d="M22.2 10.2H12.4c-1.7 0-2.8 1.1-2.8 2.6s1.1 2.5 2.8 2.5h7.2c1.7 0 2.8 1.1 2.8 2.6s-1.1 2.7-2.8 2.7H9.8" fill="none" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" stroke="#38bdf8"/>
+  <text x="44" y="22" fill="#ffffff" font-family="Outfit, 'Segoe UI', sans-serif" font-size="18" font-weight="800" letter-spacing="-0.5">Split Smarter</text>
+</svg>

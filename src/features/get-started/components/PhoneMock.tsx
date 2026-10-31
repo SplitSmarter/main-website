@@ -4,12 +4,17 @@ import {
   IconCheck,
   IconChartLine,
   IconChartPie,
+  IconChevronDown,
+  IconFish,
+  IconGlassCocktail,
   IconMapPin,
   IconMicrophone,
+  IconPencil,
   IconPhoto,
   IconReceipt,
   IconRoute,
   IconScan,
+  IconToolsKitchen2,
 } from '@tabler/icons-react';
 import { problemScenes } from '@/content/product';
 import styles from '../StartPage.module.css';
@@ -37,6 +42,46 @@ function StepIcon({ phase }: { phase: PhonePhase }) {
   return <IconReceipt {...props} />;
 }
 
+type SavedLine = (typeof problemScenes.capture.saved.lines)[number];
+type SavedPerson = SavedLine['paidBy'][number];
+
+function faceStyle(initial: string) {
+  if (initial === 'A') return styles.faceA;
+  if (initial === 'Y') return styles.faceY;
+  if (initial === 'J') return styles.faceJ;
+  return styles.faceP;
+}
+
+const savedPins = [
+  { x: '22%', y: '38%' },
+  { x: '48%', y: '24%' },
+  { x: '70%', y: '46%' },
+  { x: '36%', y: '62%' },
+];
+
+function LineMark({ icon }: { icon: SavedLine['icon'] }) {
+  const props = { size: 14, stroke: 1.7 } as const;
+  if (icon === 'fish') return <IconFish {...props} />;
+  if (icon === 'plate') return <IconToolsKitchen2 {...props} />;
+  return <IconGlassCocktail {...props} />;
+}
+
+function Faces({ people }: { people: SavedPerson[] }) {
+  return (
+    <span className={styles.phoneFaces}>
+      {people.map((person) => (
+        <span
+          key={person.person}
+          className={`${styles.phoneFaceDot} ${faceStyle(person.initial)}`}
+          title={person.person}
+        >
+          {person.initial}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function usePrefersReducedMotion() {
   const [reduce, setReduce] = useState(false);
 
@@ -54,7 +99,6 @@ function usePrefersReducedMotion() {
 export function PhoneMock() {
   const capture = problemScenes.capture;
   const budget = problemScenes.budget;
-  const item = problemScenes.ledger.items[0];
   const reduce = usePrefersReducedMotion();
   const [phase, setPhase] = useState<PhonePhase>(() => {
     if (typeof window === 'undefined') return 'scan';
@@ -270,7 +314,11 @@ export function PhoneMock() {
                     ))}
                   </>
                 ) : (
-                  <IconMapPin size={26} stroke={1.8} />
+                  savedPins.map((pin) => (
+                    <span key={`${pin.x}-${pin.y}`} className={styles.phoneSavedPin} style={{ left: pin.x, top: pin.y }}>
+                      <IconMapPin size={16} stroke={1.8} />
+                    </span>
+                  ))
                 )}
               </div>
               <div className={styles.phoneSavedSheet}>
@@ -302,50 +350,53 @@ export function PhoneMock() {
               ) : (
                   <>
                     <p className={styles.phoneKicker}>{capture.trip}</p>
-                    <strong className={styles.phoneAmount}>{capture.loggedAmount}</strong>
+                    <strong className={styles.phoneAmount}>{capture.saved.total}</strong>
                     <p className={styles.phoneTitle}>{capture.loggedTitle}</p>
-                    <ul className={styles.phoneFacts}>
-                      <li>
-                        <span>
-                          <strong>{item.title}</strong>
-                          <small>Shared by {item.shared.map((person) => person.person).join(' and ')}</small>
-                        </span>
-                        <em>{capture.loggedAmount}</em>
-                      </li>
-                      <li>
-                        <span>
-                          <strong>Still open</strong>
-                          <small>Priya and Jonah</small>
-                        </span>
-                      </li>
+                    <p className={styles.phoneSplit}>{capture.saved.split}</p>
+                    <ul className={styles.phoneLines}>
+                      {capture.saved.lines.map((line) => (
+                        <li key={line.title}>
+                          <div className={styles.phoneLineHead}>
+                            <span className={styles.phoneLineIcon} aria-hidden>
+                              <LineMark icon={line.icon} />
+                            </span>
+                            <span>
+                              <strong>{line.title}</strong>
+                              {line.paidBy.length > 0 && line.shared.length === 0 && (
+                                <small className={styles.phoneLineMeta}>
+                                  Paid by
+                                  <Faces people={line.paidBy} />
+                                </small>
+                              )}
+                            </span>
+                            <em>{line.amount}</em>
+                            <IconPencil className={styles.phonePencil} size={14} stroke={1.7} aria-hidden />
+                          </div>
+                          {line.shared.length > 0 && (
+                            <div className={styles.phoneLinePeople}>
+                              <span>
+                                Paid by
+                                <Faces people={line.paidBy} />
+                                <IconChevronDown size={12} stroke={1.8} aria-hidden />
+                              </span>
+                              <span>
+                                Shared between
+                                <Faces people={line.shared} />
+                              </span>
+                            </div>
+                          )}
+                        </li>
+                      ))}
                     </ul>
-                    <div className={styles.phoneBudget}>
-                      <div className={styles.phoneRow}>
-                        <span className={styles.appIcon}><IconChartPie size={15} stroke={1.6} /></span>
-                        <span>
-                          <strong>{budget.name}</strong>
-                          <small>{budget.strength} · {budget.level} used</small>
-                        </span>
-                      </div>
-                      <div className={styles.phoneUsage} aria-hidden>
-                        <span />
-                      </div>
-                    </div>
-                    <div className={styles.phoneRow}>
-                      <span className={styles.appIcon}><IconMapPin size={15} stroke={1.6} /></span>
-                      <span>
-                        <strong>{capture.loggedPlace}</strong>
-                        <small>Place</small>
-                      </span>
-                    </div>
                     <button
                       type="button"
                       className={`${styles.phoneTrailButton}${trailPressed ? ` ${styles.isPressed}` : ''}`}
                       onClick={() => setPhase('trail')}
                     >
                       <IconRoute size={16} stroke={1.8} />
-                      Show trail
+                      Trail
                     </button>
+                    <span className={styles.phoneSpark} aria-hidden />
                   </>
                 )}
               </div>
