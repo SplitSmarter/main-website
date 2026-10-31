@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
+  IconBuildingBank,
   IconCamera,
   IconCheck,
   IconChartLine,
@@ -19,9 +20,16 @@ import {
 import { problemScenes } from '@/content/product';
 import styles from '../StartPage.module.css';
 
-type PhonePhase = 'scan' | 'type' | 'scanning' | 'saved' | 'trail' | 'analytics' | 'celebrate';
+type PhonePhase = 'records' | 'scan' | 'type' | 'scanning' | 'saved' | 'trail' | 'analytics' | 'celebrate';
+
+const bankRecords = [
+  { merchant: 'Cafe Lumen', detail: 'Card · today', amount: '€182.00', chosen: true },
+  { merchant: 'Uber', detail: 'Card · yesterday', amount: '€14.20', chosen: false },
+  { merchant: 'Rent', detail: 'Transfer · 1 Oct', amount: '€900.00', chosen: false },
+] as const;
 
 const stepNotice: Record<PhonePhase, string> = {
+  records: 'A line from your bank',
   scan: 'Scan the bill',
   type: 'Add a note with voice or text',
   scanning: 'Parse complex transactions easily',
@@ -33,6 +41,7 @@ const stepNotice: Record<PhonePhase, string> = {
 
 function StepIcon({ phase }: { phase: PhonePhase }) {
   const props = { size: 15, stroke: 1.8 } as const;
+  if (phase === 'records') return <IconBuildingBank {...props} />;
   if (phase === 'type') return <IconMicrophone {...props} />;
   if (phase === 'scanning') return <IconScan {...props} />;
   if (phase === 'saved') return <IconCheck {...props} />;
@@ -100,11 +109,9 @@ export function PhoneMock() {
   const capture = problemScenes.capture;
   const budget = problemScenes.budget;
   const reduce = usePrefersReducedMotion();
-  const [phase, setPhase] = useState<PhonePhase>(() => {
-    if (typeof window === 'undefined') return 'scan';
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'saved' : 'scan';
-  });
+  const [phase, setPhase] = useState<PhonePhase>('records');
   const [typed, setTyped] = useState(0);
+  const [recordsPressed, setRecordsPressed] = useState(false);
   const [trailPressed, setTrailPressed] = useState(false);
   const [analyticsPressed, setAnalyticsPressed] = useState(false);
   const [brandOn, setBrandOn] = useState(false);
@@ -115,6 +122,9 @@ export function PhoneMock() {
 
   if (reduce && !reducedPhases.includes(phase)) {
     setPhase('saved');
+  }
+  if ((reduce || phase !== 'records') && recordsPressed) {
+    setRecordsPressed(false);
   }
   if ((reduce || phase !== 'saved') && trailPressed) {
     setTrailPressed(false);
@@ -132,17 +142,21 @@ export function PhoneMock() {
 
   useEffect(() => {
     if (reduce) return;
-    const hold = phase === 'type'
-      ? capture.note.length * 36 + 480
+    const hold = phase === 'records'
+      ? 5200
+      : phase === 'type'
+      ? capture.note.length * 36 + 1800
       : phase === 'scan'
-        ? 1600
+        ? 3800
         : phase === 'scanning'
-          ? 2800
+          ? 5200
           : phase === 'saved'
-            ? 4600
-            : 3800;
+            ? 8200
+            : 6800;
     const timer = window.setTimeout(() => {
-      if (phase === 'scan') {
+      if (phase === 'records') {
+        setPhase('scan');
+      } else if (phase === 'scan') {
         setTyped(0);
         setPhase('type');
       } else if (phase === 'type') {
@@ -156,7 +170,7 @@ export function PhoneMock() {
       } else if (phase === 'analytics') {
         setPhase('celebrate');
       } else {
-        setPhase('scan');
+        setPhase('records');
       }
     }, hold);
     return () => window.clearTimeout(timer);
@@ -171,14 +185,20 @@ export function PhoneMock() {
   }, [phase, reduce, capture.note]);
 
   useEffect(() => {
+    if (reduce || phase !== 'records') return;
+    const timer = window.setTimeout(() => setRecordsPressed(true), 4000);
+    return () => window.clearTimeout(timer);
+  }, [phase, reduce]);
+
+  useEffect(() => {
     if (reduce || phase !== 'saved') return;
-    const timer = window.setTimeout(() => setTrailPressed(true), 3400);
+    const timer = window.setTimeout(() => setTrailPressed(true), 6400);
     return () => window.clearTimeout(timer);
   }, [phase, reduce]);
 
   useEffect(() => {
     if (reduce || phase !== 'trail') return;
-    const timer = window.setTimeout(() => setAnalyticsPressed(true), 2600);
+    const timer = window.setTimeout(() => setAnalyticsPressed(true), 5200);
     return () => window.clearTimeout(timer);
   }, [phase, reduce]);
 
@@ -255,6 +275,30 @@ export function PhoneMock() {
               stepNotice[phase]
             )}
           </p>
+          {phase === 'records' && (
+            <div className={styles.phoneFace}>
+              <p className={styles.phoneKicker}>Bank</p>
+              <p className={styles.phoneTitle}>Recent records</p>
+              <ul className={styles.phoneRecords}>
+                {bankRecords.map((record) => (
+                  <li key={record.merchant} className={record.chosen ? styles.phoneRecordChosen : undefined}>
+                    {record.chosen && <i className={styles.phoneSweep} />}
+                    <strong>{record.merchant}</strong>
+                    <small>{record.detail}</small>
+                    <em>{record.amount}</em>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                className={`${styles.phoneTrailButton} ${styles.phoneRecordsButton}${recordsPressed ? ` ${styles.isPressed}` : ''}`}
+                onClick={() => setPhase('scan')}
+              >
+                <IconReceipt size={16} stroke={1.8} />
+                Add expense
+              </button>
+            </div>
+          )}
           {showForm && (
             <div className={styles.phoneFace}>
               <p className={styles.phoneKicker}>{capture.heading}</p>

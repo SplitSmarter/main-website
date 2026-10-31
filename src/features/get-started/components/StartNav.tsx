@@ -67,7 +67,6 @@ export function StartNav({ onGetStarted }: StartNavProps) {
           {open && (
             <p className={styles.priceTip} id={tipId} role="status">
               <strong>It's free.</strong>
-              Track every expense.
             </p>
           )}
         </div>
@@ -109,7 +108,7 @@ export function StartNav({ onGetStarted }: StartNavProps) {
             ))}
             <p className={styles.drawerPrice}>
               <strong>Pricing</strong>
-              It's free. Track every expense.
+              It's free.
             </p>
             <button
               type="button"
@@ -119,7 +118,7 @@ export function StartNav({ onGetStarted }: StartNavProps) {
                 onGetStarted();
               }}
             >
-              Start for free
+              Get started
             </button>
           </aside>
         </div>

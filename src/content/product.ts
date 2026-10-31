@@ -1,5 +1,45 @@
 export const brand = 'Split Smarter';
 
+export const socialLinks = [
+  { label: 'Instagram', href: 'https://www.instagram.com/splitsmarter.app' },
+  { label: 'WhatsApp', href: 'https://chat.whatsapp.com/HU90mWJwziy1pnibVREpWZ' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/splitsmarter/' },
+  { label: 'Discord', href: 'https://discord.gg/Y6JCGfEp9w' },
+] as const;
+
+export const answers = [
+  {
+    question: 'What was this bank line for?',
+    answer:
+      'A bank record can be linked to an expense. On the expense you manage the split and the amount. The bank record and the expense stay separate, and they stay in sync.',
+  },
+  {
+    question: 'How can I add an expense and settle with friends?',
+    answer:
+      'Add the expense, then settle with the people who shared it. Who paid is separate from who it was shared between. One person can pay for an item that several people share. Net is what someone paid minus their share. The person who paid can link a bank transfer to the settlement. The expense and the transfer stay side by side, so paying someone back does not erase the dinner.',
+  },
+  {
+    question: 'How can groceries and produce both count as food?',
+    answer:
+      'Give each type a name and a parent category. Groceries is a type under Food. Produce is a type under Food. Food sits above both, so a query on Food includes both expenses. A budget on Food covers both types. A budget on Groceries covers only that type.',
+  },
+  {
+    question: 'How can I see what I buy across many shops?',
+    answer:
+      'A catalog of items and merchants covers what you can spend on, in shops and online. You can view your expenses across many merchants, offline and online.',
+  },
+  {
+    question: 'How can I see a trip when the spending is still in the other currency?',
+    answer:
+      'A memory keeps the trip. You see how it was spent, each charge in the country’s currency, and the total in yours with live conversion rates. Add it to your list of memories. A memory can be turned on or off. You can revisit the whole trip later.',
+  },
+  {
+    question: 'How can I see the pattern when I keep returning to the same places?',
+    answer:
+      'Analytics shows the region you spend in. Spending at the same shop stays together, visit after visit.',
+  },
+] as const;
+
 export const startNav = [
   { label: 'Add', href: '#capture' },
   { label: 'Ledger', href: '#ledger' },
@@ -10,8 +50,8 @@ export const startNav = [
 export const getStarted = {
   title: 'Get started',
   headline: 'Track every expense.',
-  lede: 'Built for one person and the groups they spend with, the way the money actually moves.',
-  cta: 'Start for free',
+  lede: 'Turn your bank records into insight. See how your money flows.',
+  cta: 'Get started',
 };
 
 export const proof = [
@@ -80,7 +120,7 @@ export const problemScenes = {
     id: 'ledger',
     title: 'Who paid is not the share.',
     body: 'Split by item. One item can be shared between several people. Net is what someone paid minus their share.',
-    paid: 'Anika · $186.20',
+    paid: 'Anika · €182.00',
     items: [
       {
         title: 'Sea bass',
@@ -93,7 +133,7 @@ export const problemScenes = {
       },
       {
         title: 'Wine',
-        amount: '$40.00',
+        amount: '€40.00',
         icon: 'glass' as const,
         shared: [
           { person: 'Jonah', initial: 'J' },
@@ -109,7 +149,7 @@ export const problemScenes = {
     expense: {
       kind: 'Spend',
       title: 'Saturday dinner',
-      amount: '$186.20',
+      amount: '€182.00',
       shared: [
         { person: 'Anika', initial: 'A' },
         { person: 'You', initial: 'Y' },
@@ -117,7 +157,7 @@ export const problemScenes = {
         { person: 'Priya', initial: 'P' },
       ],
     },
-    transfer: { kind: 'Transfer', title: 'You to Anika', detail: 'Person to person', amount: '$46.55' },
+    transfer: { kind: 'Transfer', title: 'You to Anika', detail: 'Person to person', amount: '€46.55' },
   },
   receipt: {
     id: 'receipt',
@@ -127,18 +167,18 @@ export const problemScenes = {
       {
         parent: 'Food',
         lines: [
-          { title: 'Groceries', amount: '$42.10', icon: 'basket' as const },
-          { title: 'Produce', amount: '$12.00', icon: 'basket' as const },
+          { title: 'Groceries', amount: '€42.10', icon: 'basket' as const },
+          { title: 'Produce', amount: '€12.00', icon: 'basket' as const },
         ],
       },
       {
         parent: 'Home',
         lines: [
-          { title: 'Household', amount: '$18.40', icon: 'home' as const },
+          { title: 'Household', amount: '€18.40', icon: 'home' as const },
         ],
       },
     ],
-    total: { label: 'Total', amount: '$72.50' },
+    total: { label: 'Total', amount: '€72.50' },
   },
   merchants: {
     id: 'merchants',
@@ -146,9 +186,9 @@ export const problemScenes = {
     body: 'Search a large merchant catalog, or add your own. Spend at one merchant stays together, and a branch is the place that payment went.',
     strip: 'Supports the majority of merchants',
     rows: [
-      { name: 'Mercado da Ribeira', branch: 'Downtown', amount: '$86.00' },
-      { name: 'Cafe Lumen', branch: 'Harbor', amount: '$18.40' },
-      { name: 'Alfama rooms', branch: 'Alfama', amount: '$420.00' },
+      { name: 'Mercado da Ribeira', branch: 'Downtown', amount: '€86.00' },
+      { name: 'Cafe Lumen', branch: 'Harbor', amount: '€182.00' },
+      { name: 'Alfama rooms', branch: 'Alfama', amount: '€420.00' },
     ],
   },
   budget: {
@@ -179,7 +219,7 @@ export const problemScenes = {
     name: 'Lisbon weekend',
     note: 'Totals return in your profile currency.',
     stops: [
-      { index: '1', name: 'Cafe Lumen', when: 'Morning', amount: '€18.40', slot: 'morning' as const },
+      { index: '1', name: 'Cafe Lumen', when: 'Morning', amount: '€182.00', slot: 'morning' as const },
       { index: '2', name: 'Mercado da Ribeira', when: 'Afternoon', amount: '€86.00', slot: 'afternoon' as const },
       { index: '3', name: 'Alfama rooms', when: 'Evening', amount: '€420.00', slot: 'evening' as const },
     ],
@@ -238,7 +278,7 @@ export const spendMap = {
 export const siteClose = {
   guideTitle: 'Guide',
   privacyTitle: 'Privacy',
-  privacy: 'You control who can find you and invite you.',
+  privacy: 'You have full control over your data and visibility. You can decide who can find you and invite you.',
   privacyLink: { label: 'Who can find you', path: '/en/account/howto-manage-profile-visibility' },
   guide: [
     { label: 'User guide', path: '' },
@@ -247,5 +287,6 @@ export const siteClose = {
     { label: 'Places', path: '/en/places' },
     { label: 'Settle', path: '/en/settlements' },
   ],
-  start: 'Start for free',
+  start: 'Get started',
+  email: 'support@splitsmarter.app',
 };

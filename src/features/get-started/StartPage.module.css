@@ -288,6 +288,7 @@
 }
 
 .cta {
+  position: relative;
   margin-top: 28px;
   display: inline-flex;
   align-items: center;
@@ -302,8 +303,26 @@
   cursor: pointer;
 }
 
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: conic-gradient(from var(--cta-spin), transparent 0 62%, var(--accent));
+  animation: ctaSpin 1.6s linear infinite;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
 .cta span {
-  position: relative;
   width: 34px;
   height: 34px;
   display: grid;
@@ -311,16 +330,6 @@
   border-radius: 50%;
   background: var(--cta-text);
   color: var(--cta);
-}
-
-.cta span::before {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 0 62%, var(--accent));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 1.5px));
-  animation: spin 1.6s linear infinite;
 }
 
 .proofBand {
@@ -680,6 +689,55 @@
   background: var(--accent);
   box-shadow: 0 0 10px var(--accent);
   animation: phoneSweep 1.3s ease-in-out infinite;
+}
+
+.phoneRecords {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.phoneRecords li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  overflow: hidden;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+}
+
+.phoneRecords strong {
+  font-size: 14px;
+}
+
+.phoneRecords small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.phoneRecords em {
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.phoneRecordChosen {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, var(--bg));
+}
+
+.phoneRecordChosen .phoneSweep {
+  animation-name: phoneRecordSweep;
+}
+
+.phoneRecordsButton {
+  margin-top: auto;
 }
 
 .phonePeople,
@@ -2052,8 +2110,18 @@ button.phoneRow {
   to { opacity: 1; transform: none; }
 }
 
+@property --cta-spin {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@keyframes ctaSpin {
+  to { --cta-spin: -360deg; }
 }
 
 @keyframes usage {
@@ -2083,6 +2151,11 @@ button.phoneRow {
   to { transform: translateY(62px); }
 }
 
+@keyframes phoneRecordSweep {
+  from { transform: translateY(8px); }
+  to { transform: translateY(46px); }
+}
+
 @keyframes blink {
   0%, 45% { opacity: 1; }
   46%, 100% { opacity: 0; }
@@ -2091,6 +2164,66 @@ button.phoneRow {
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.35; }
+}
+
+.answers {
+  max-width: 720px;
+  margin-bottom: 64px;
+  border-top: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+}
+
+.answers details {
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+}
+
+.answers summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.answers summary::-webkit-details-marker {
+  display: none;
+}
+
+.answers summary::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+.answers details[open] summary::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+
+.answers summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.answers h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.answers p {
+  max-width: 62ch;
+  margin: 0 0 18px;
+  color: color-mix(in srgb, var(--text) 78%, transparent);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .close {
@@ -2104,7 +2237,7 @@ button.phoneRow {
 
 .closeTop {
   display: grid;
-  grid-template-columns: minmax(220px, 1.6fr) repeat(2, minmax(160px, 0.8fr));
+  grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(120px, 0.7fr));
   gap: 40px 32px;
 }
 
@@ -2281,6 +2414,35 @@ button.phoneRow {
   color: var(--danger);
 }
 
+.notifySocial {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.notifySocial a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--text) 16%, transparent);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.notifySocial svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -2422,6 +2584,10 @@ button.phoneRow {
     text-align: center;
   }
 
+  .answers summary {
+    text-align: left;
+  }
+
   .closeBrandBlock,
   .closeCol {
     align-items: center;
@@ -2470,7 +2636,7 @@ button.phoneRow {
   .phoneCaret,
   .phoneMicLive,
   .phoneSpinner,
-  .cta span::before,
+  .cta::before,
   .phoneModalCard,
   .phoneSavedSheet,
   .phoneThoughts li,

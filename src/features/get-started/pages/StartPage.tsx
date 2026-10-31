@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { Answers } from '../components/Answers';
 import { NotifyDialog } from '../components/NotifyDialog';
 import { ProblemScenes } from '../components/ProblemScenes';
 import { PhoneMock } from '../components/PhoneMock';
@@ -54,6 +55,7 @@ export function StartPage() {
           </div>
           <SpendMap />
           <div className={styles.below}>
+            <Answers />
             <SiteClose onGetStarted={openNotify} />
           </div>
         </div>
