@@ -47,7 +47,10 @@ export function StartNav({ onGetStarted }: StartNavProps) {
 
   return (
     <header className={styles.nav}>
-      <Link className={styles.logo} to="/">{brand}</Link>
+      <Link className={styles.logo} to="/">
+        <img src="/brand/mark-tile-dark.svg" alt="" width={32} height={32} />
+        {brand}
+      </Link>
       <nav className={styles.pills} aria-label="Product">
         {startNav.map((item) => (
           <a key={item.href} href={item.href}>{item.label}</a>
@@ -64,7 +67,6 @@ export function StartNav({ onGetStarted }: StartNavProps) {
           {open && (
             <p className={styles.priceTip} id={tipId} role="status">
               <strong>It's free.</strong>
-              Track every expense.
             </p>
           )}
         </div>
@@ -91,7 +93,10 @@ export function StartNav({ onGetStarted }: StartNavProps) {
             onClick={(event) => event.stopPropagation()}
           >
             <div className={styles.drawerHead}>
-              <strong>{brand}</strong>
+              <strong>
+                <img src="/brand/mark-tile-dark.svg" alt="" width={28} height={28} />
+                {brand}
+              </strong>
               <button type="button" onClick={() => setMenuOpen(false)} aria-label="Close menu">
                 <IconX size={18} stroke={1.8} />
               </button>
@@ -103,7 +108,7 @@ export function StartNav({ onGetStarted }: StartNavProps) {
             ))}
             <p className={styles.drawerPrice}>
               <strong>Pricing</strong>
-              It's free. Track every expense.
+              It's free.
             </p>
             <button
               type="button"
@@ -113,7 +118,7 @@ export function StartNav({ onGetStarted }: StartNavProps) {
                 onGetStarted();
               }}
             >
-              Start for free
+              Get started
             </button>
           </aside>
         </div>

@@ -7,10 +7,21 @@ import '@/index.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const container = document.getElementById('root');
+if (!container) {
+  throw new Error('Root element missing');
+}
+
+const tree = (
   <React.StrictMode>
     <AppProvider>
       <RouterProvider router={router} />
     </AppProvider>
   </React.StrictMode>
 );
+
+if (container.hasChildNodes()) {
+  ReactDOM.hydrateRoot(container, tree);
+} else {
+  ReactDOM.createRoot(container).render(tree);
+}

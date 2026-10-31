@@ -1,4 +1,4 @@
-import { brand, getStarted, siteClose } from '@/content/product';
+import { brand, getStarted, siteClose, socialLinks } from '@/content/product';
 import { env } from '@/config/env';
 import styles from '../StartPage.module.css';
 
@@ -33,7 +33,10 @@ export function SiteClose({ onGetStarted }: SiteCloseProps) {
     <footer className={styles.close}>
       <div className={styles.closeTop}>
         <div className={styles.closeBrandBlock}>
-          <p className={styles.closeBrand}>{brand}</p>
+          <p className={styles.closeBrand}>
+            <img src="/brand/mark-tile-dark.svg" alt="" width={32} height={32} />
+            {brand}
+          </p>
           <p className={styles.closeLede}>{getStarted.lede}</p>
         </div>
         <nav className={styles.closeCol} aria-label={siteClose.guideTitle}>
@@ -45,6 +48,14 @@ export function SiteClose({ onGetStarted }: SiteCloseProps) {
             return null;
           })}
         </nav>
+        <nav className={styles.closeCol} aria-label="Follow Split Smarter">
+          <h2>Follow</h2>
+          {socialLinks.map((item) => (
+            <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer">
+              {item.label}
+            </a>
+          ))}
+        </nav>
         <div className={styles.closeCol}>
           <h2>{siteClose.privacyTitle}</h2>
           <p>{siteClose.privacy}</p>
@@ -53,6 +64,7 @@ export function SiteClose({ onGetStarted }: SiteCloseProps) {
       </div>
       <div className={styles.closeLegal}>
         <p>© {year} {brand}</p>
+        <a href={`mailto:${siteClose.email}`}>{siteClose.email}</a>
         <button type="button" onClick={onGetStarted}>{siteClose.start}</button>
       </div>
     </footer>

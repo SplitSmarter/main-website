@@ -2,14 +2,117 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="canonical" href="https://splitsmarter.app/" />
+    <meta name="theme-color" content="#07090e" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Split Smarter is a ledger for groups, places, and the money between them."
+      content="Turn your bank records into insight. Split a bill by item, keep a budget, and follow a trip as a trail."
     />
-    <title>Split Smarter</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://splitsmarter.app/" />
+    <meta property="og:title" content="Split Smarter — Track every expense" />
+    <meta
+      property="og:description"
+      content="Turn your bank records into insight. Split a bill by item, keep a budget, and follow a trip as a trail."
+    />
+    <meta property="og:image" content="https://splitsmarter.app/brand/og-dark.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Split Smarter — Track every expense" />
+    <meta
+      name="twitter:description"
+      content="Turn your bank records into insight. Split a bill by item, keep a budget, and follow a trip as a trail."
+    />
+    <meta name="twitter:image" content="https://splitsmarter.app/brand/og-dark.png" />
+    <title>Split Smarter — Track every expense</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "Split Smarter",
+            "url": "https://splitsmarter.app/",
+            "logo": "https://splitsmarter.app/brand/mark-tile-dark-512.png",
+            "email": "support@splitsmarter.app",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "support@splitsmarter.app",
+              "contactType": "customer support"
+            },
+            "sameAs": [
+              "https://www.instagram.com/splitsmarter.app",
+              "https://chat.whatsapp.com/HU90mWJwziy1pnibVREpWZ",
+              "https://www.linkedin.com/company/splitsmarter/",
+              "https://discord.gg/Y6JCGfEp9w"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "name": "Split Smarter",
+            "url": "https://splitsmarter.app/"
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What was this bank line for?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A bank record can be linked to an expense. On the expense you manage the split and the amount. The bank record and the expense stay separate, and they stay in sync."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I add an expense and settle with friends?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Add the expense, then settle with the people who shared it. Who paid is separate from who it was shared between. One person can pay for an item that several people share. Net is what someone paid minus their share. The person who paid can link a bank transfer to the settlement. The expense and the transfer stay side by side, so paying someone back does not erase the dinner."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can groceries and produce both count as food?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Give each type a name and a parent category. Groceries is a type under Food. Produce is a type under Food. Food sits above both, so a query on Food includes both expenses. A budget on Food covers both types. A budget on Groceries covers only that type."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I see what I buy across many shops?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A catalog of items and merchants covers what you can spend on, in shops and online. You can view your expenses across many merchants, offline and online."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I see a trip when the spending is still in the other currency?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "A memory keeps the trip. You see how it was spent, each charge in the country’s currency, and the total in yours with live conversion rates. Add it to your list of memories. A memory can be turned on or off. You can revisit the whole trip later."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How can I see the pattern when I keep returning to the same places?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Analytics shows the region you spend in. Spending at the same shop stays together, visit after visit."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
