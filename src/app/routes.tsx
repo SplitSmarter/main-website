@@ -1,6 +1,4 @@
 import { createBrowserRouter } from 'react-router';
-import { StartPage } from '@/features/get-started/pages/StartPage';
+import { appRoutes } from './route-table';
 
-export const router = createBrowserRouter([
-  { path: '/', element: <StartPage /> },
-]);
+export const router = createBrowserRouter(appRoutes);

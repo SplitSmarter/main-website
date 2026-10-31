@@ -1,35 +1,17 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { IconMenu2, IconX } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { brand, startNav } from '@/content/product';
 import styles from '../StartPage.module.css';
+import { GetStartedLink } from './GetStartedLink';
 
 type StartNavProps = {
   onGetStarted: () => void;
 };
 
 export function StartNav({ onGetStarted }: StartNavProps) {
-  const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const tipId = useId();
   const menuId = useId();
-  const priceRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onPointer = (event: PointerEvent) => {
-      if (!priceRef.current?.contains(event.target as Node)) setOpen(false);
-    };
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('pointerdown', onPointer);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('pointerdown', onPointer);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -55,21 +37,7 @@ export function StartNav({ onGetStarted }: StartNavProps) {
         {startNav.map((item) => (
           <a key={item.href} href={item.href}>{item.label}</a>
         ))}
-        <div className={styles.price} ref={priceRef}>
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls={tipId}
-            onClick={() => setOpen((value) => !value)}
-          >
-            Pricing
-          </button>
-          {open && (
-            <p className={styles.priceTip} id={tipId} role="status">
-              <strong>It's free.</strong>
-            </p>
-          )}
-        </div>
+        <Link to="/pricing">Pricing</Link>
       </nav>
       <button
         type="button"
@@ -81,9 +49,9 @@ export function StartNav({ onGetStarted }: StartNavProps) {
         <IconMenu2 size={20} stroke={1.8} />
         <span className={styles.visuallyHidden}>Open menu</span>
       </button>
-      <button type="button" className={styles.login} onClick={onGetStarted}>
+      <GetStartedLink className={styles.login} onGetStarted={onGetStarted}>
         Get started
-      </button>
+      </GetStartedLink>
       {menuOpen && (
         <div className={styles.drawerBackdrop} onClick={() => setMenuOpen(false)}>
           <aside
@@ -106,20 +74,16 @@ export function StartNav({ onGetStarted }: StartNavProps) {
                 {item.label}
               </a>
             ))}
-            <p className={styles.drawerPrice}>
-              <strong>Pricing</strong>
-              It's free.
-            </p>
-            <button
-              type="button"
+            <Link to="/pricing" onClick={() => setMenuOpen(false)}>Pricing</Link>
+            <GetStartedLink
               className={styles.drawerCta}
-              onClick={() => {
+              onGetStarted={() => {
                 setMenuOpen(false);
                 onGetStarted();
               }}
             >
               Get started
-            </button>
+            </GetStartedLink>
           </aside>
         </div>
       )}

@@ -41,15 +41,31 @@ export const answers = [
 ] as const;
 
 export const startNav = [
-  { label: 'Add', href: '#capture' },
-  { label: 'Ledger', href: '#ledger' },
-  { label: 'Budget', href: '#budget' },
-  { label: 'Map', href: '#map' },
+  { label: 'Add', href: '/#capture' },
+  { label: 'Ledger', href: '/#ledger' },
+  { label: 'Budget', href: '/#budget' },
+  { label: 'Map', href: '/#map' },
+] as const;
+
+export const homeMeta = {
+  title: 'Split Smarter: Split Bills, Track Expenses & Settle Up',
+  description:
+    'Split bills by item, track personal and group expenses, set shared budgets and settle up with friends. Free to start, 156 currencies supported.',
+};
+
+export const sitePages = [
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Splitwise alternative', href: '/splitwise-alternative' },
+  { label: 'Trips', href: '/trip-expense-splitter' },
+  { label: 'Roommates', href: '/roommates' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Terms', href: '/terms' },
 ] as const;
 
 export const getStarted = {
   title: 'Get started',
-  headline: 'Track every expense.',
+  headline: 'Split bills and track every expense.',
   lede: 'Turn your bank records into insight. See how your money flows.',
   cta: 'Get started',
 };
@@ -64,6 +80,7 @@ export const problemScenes = {
   capture: {
     id: 'capture',
     title: 'A bill, a note, or your voice.',
+    search: 'Add an expense from a bill, a note, or your voice.',
     body: 'Add a photo of the bill, a written note, or a note you dictate. A photo and a note can go together. The expense is filled in for you to review, then save.',
     heading: 'Scan receipt',
     hint: 'Dictate a note, add a photo, or both.',
@@ -119,6 +136,7 @@ export const problemScenes = {
   ledger: {
     id: 'ledger',
     title: 'Who paid is not the share.',
+    search: 'Who paid is separate from who the expense was shared between.',
     body: 'Split by item. One item can be shared between several people. Net is what someone paid minus their share.',
     paid: 'Anika · €182.00',
     items: [
@@ -145,6 +163,7 @@ export const problemScenes = {
   debt: {
     id: 'debt',
     title: 'A payment does not erase the bill.',
+    search: 'Settle up, and keep the expense next to the transfer.',
     body: 'Spending stays on the expense. A transfer is from one person or merchant to another. The two stay side by side, so the cost and the movement are easy to tell apart.',
     expense: {
       kind: 'Spend',
@@ -162,6 +181,7 @@ export const problemScenes = {
   receipt: {
     id: 'receipt',
     title: 'One receipt, more than one category.',
+    search: 'A parent category covers the types under it, so a budget can cover both.',
     body: 'Groceries and Produce stay under Food. Household stays under Home. A parent covers those related categories, not a category chosen at random.',
     groups: [
       {
@@ -183,6 +203,7 @@ export const problemScenes = {
   merchants: {
     id: 'merchants',
     title: 'The same shop, every visit.',
+    search: 'See what you buy across many shops, offline and online.',
     body: 'Search a large merchant catalog, or add your own. Spend at one merchant stays together, and a branch is the place that payment went.',
     strip: 'Supports the majority of merchants',
     rows: [
@@ -194,6 +215,7 @@ export const problemScenes = {
   budget: {
     id: 'budget',
     title: 'The cap follows the share.',
+    search: 'A shared budget follows the people who share the expense.',
     body: 'A soft cap warns. It can be just you, shared with other people, or a whole group, and it can watch categories, places, merchants, and memories together. A hard cap can refuse a new expense.',
     name: 'Groceries',
     strength: 'Soft',
@@ -208,6 +230,7 @@ export const problemScenes = {
   trip: {
     id: 'trip',
     title: 'A trip is not a pin.',
+    search: 'A trip expense splitter keeps the trip, not a single pin.',
     body: 'A memory is the date window. A place is where the charge happened.',
     memory: { title: 'Lisbon weekend', detail: '12–14 Apr' },
     place: { title: 'Mercado da Ribeira', detail: 'Place' },
@@ -215,6 +238,7 @@ export const problemScenes = {
   trail: {
     id: 'trail',
     title: 'The trip leaves a trail.',
+    search: 'A trip expense splitter maps every charge in its own currency.',
     body: 'Save the trip, and keep each charge in its own currency. The map joins the places in the order you visited. The same spend breaks down by time, category, people, and what is still open.',
     name: 'Lisbon weekend',
     note: 'Totals return in your profile currency.',

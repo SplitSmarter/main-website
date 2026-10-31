@@ -1,6 +1,7 @@
 import { IconArrowRight, IconCoins, IconLanguage, IconTag } from '@tabler/icons-react';
 import { getStarted, proof } from '@/content/product';
 import styles from '../StartPage.module.css';
+import { GetStartedLink } from './GetStartedLink';
 
 const proofIcons = {
   language: IconLanguage,
@@ -14,15 +15,15 @@ type StartCopyProps = {
 
 export function StartCopy({ onGetStarted }: StartCopyProps) {
   return (
-    <section className={styles.copy} id="start">
+    <section className={styles.copy} id="get-started">
       <h1>{getStarted.headline}</h1>
       <p>{getStarted.lede}</p>
-      <button type="button" className={styles.cta} onClick={onGetStarted}>
+      <GetStartedLink className={styles.cta} onGetStarted={onGetStarted}>
         {getStarted.cta}
         <span>
           <IconArrowRight size={16} stroke={2.2} />
         </span>
-      </button>
+      </GetStartedLink>
     </section>
   );
 }
