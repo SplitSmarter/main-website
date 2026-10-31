@@ -44,10 +44,11 @@ const slotClass = {
   evening: styles.evening,
 };
 
-function SceneCopy({ title, body }: { title: string; body: string }) {
+function SceneCopy({ title, search, body }: { title: string; search: string; body: string }) {
   return (
     <div className={styles.sceneCopy}>
       <h2>{title}</h2>
+      <p className={styles.sceneSearch}>{search}</p>
       <p>{body}</p>
     </div>
   );
@@ -59,7 +60,7 @@ export function ProblemScenes() {
   return (
     <div className={styles.scenes}>
       <section className={styles.scene} id={capture.id}>
-        <SceneCopy title={capture.title} body={capture.body} />
+        <SceneCopy title={capture.title} search={capture.search} body={capture.body} />
         <div className={styles.panel}>
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconScan size={16} stroke={1.7} /></span>
@@ -95,7 +96,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={merchants.id}>
-        <SceneCopy title={merchants.title} body={merchants.body} />
+        <SceneCopy title={merchants.title} search={merchants.search} body={merchants.body} />
         <div className={styles.panel}>
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconSearch size={16} stroke={1.7} /></span>
@@ -119,7 +120,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={ledger.id}>
-        <SceneCopy title={ledger.title} body={ledger.body} />
+        <SceneCopy title={ledger.title} search={ledger.search} body={ledger.body} />
         <div className={styles.panel}>
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconReceipt size={16} stroke={1.7} /></span>
@@ -156,7 +157,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={debt.id}>
-        <SceneCopy title={debt.title} body={debt.body} />
+        <SceneCopy title={debt.title} search={debt.search} body={debt.body} />
         <div className={styles.panel}>
           <ul className={styles.stack}>
             <li>
@@ -189,7 +190,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={receipt.id}>
-        <SceneCopy title={receipt.title} body={receipt.body} />
+        <SceneCopy title={receipt.title} search={receipt.search} body={receipt.body} />
         <div className={styles.panel}>
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconReceipt size={16} stroke={1.7} /></span>
@@ -225,7 +226,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={budget.id}>
-        <SceneCopy title={budget.title} body={budget.body} />
+        <SceneCopy title={budget.title} search={budget.search} body={budget.body} />
         <div className={styles.panel}>
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconChartPie size={16} stroke={1.7} /></span>
@@ -262,7 +263,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={trip.id}>
-        <SceneCopy title={trip.title} body={trip.body} />
+        <SceneCopy title={trip.title} search={trip.search} body={trip.body} />
         <div className={styles.pair}>
           <article className={styles.panel}>
             <span className={styles.panelIcon}><IconCalendar size={16} stroke={1.7} /></span>
@@ -278,7 +279,7 @@ export function ProblemScenes() {
       </section>
 
       <section className={styles.scene} id={trail.id}>
-        <SceneCopy title={trail.title} body={trail.body} />
+        <SceneCopy title={trail.title} search={trail.search} body={trail.body} />
         <div className={styles.panel}>
           <header className={styles.panelHead}>
             <span className={styles.panelIcon}><IconRoute size={16} stroke={1.7} /></span>

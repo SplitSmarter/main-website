@@ -7,6 +7,8 @@ import { SiteClose } from '../components/SiteClose';
 import { SpendMap } from '../components/SpendMap';
 import { ProofRow, StartCopy } from '../components/StartCopy';
 import { StartNav } from '../components/StartNav';
+import { homeMeta } from '@/content/product';
+import { usePageMeta } from '../usePageMeta';
 import styles from '../StartPage.module.css';
 
 const FONT_STYLESHEET =
@@ -28,6 +30,7 @@ export function StartPage() {
   const [notifyOpen, setNotifyOpen] = useState(false);
   const openNotify = () => setNotifyOpen(true);
   const closeNotify = useCallback(() => setNotifyOpen(false), []);
+  usePageMeta(homeMeta.title, homeMeta.description, '/');
 
   return (
     <main className={styles.page}>

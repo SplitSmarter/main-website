@@ -1,5 +1,6 @@
-import { brand, getStarted, siteClose, socialLinks } from '@/content/product';
+import { brand, getStarted, siteClose, sitePages, socialLinks } from '@/content/product';
 import { env } from '@/config/env';
+import { GetStartedLink } from './GetStartedLink';
 import styles from '../StartPage.module.css';
 
 function guideBasePath(pathname: string) {
@@ -59,13 +60,22 @@ export function SiteClose({ onGetStarted }: SiteCloseProps) {
         <div className={styles.closeCol}>
           <h2>{siteClose.privacyTitle}</h2>
           <p>{siteClose.privacy}</p>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
           {privacyHref ? <a href={privacyHref}>{siteClose.privacyLink.label}</a> : null}
         </div>
       </div>
+      <nav className={styles.closePages} aria-label="Pages">
+        {sitePages.map((item) => (
+          <a key={item.href} href={item.href}>{item.label}</a>
+        ))}
+      </nav>
       <div className={styles.closeLegal}>
         <p>© {year} {brand}</p>
         <a href={`mailto:${siteClose.email}`}>{siteClose.email}</a>
-        <button type="button" onClick={onGetStarted}>{siteClose.start}</button>
+        <GetStartedLink className={styles.closeStart} onGetStarted={onGetStarted}>
+          {siteClose.start}
+        </GetStartedLink>
       </div>
     </footer>
   );

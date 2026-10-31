@@ -1,13 +1,20 @@
 import { renderToString } from 'react-dom/server';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { AppProvider } from './app/providers/AppProvider';
-import { StartPage } from './features/get-started/pages/StartPage';
+import { appRoutes } from './app/route-table';
+import { pageHeads } from './content/pages';
 
-export function renderPage() {
+export { pageHeads };
+
+export function renderPage(url: string) {
   return renderToString(
     <AppProvider>
-      <MemoryRouter>
-        <StartPage />
+      <MemoryRouter initialEntries={[url]}>
+        <Routes>
+          {appRoutes.flatMap((route) => (
+            route.path ? [<Route key={route.path} path={route.path} element={route.element} />] : []
+          ))}
+        </Routes>
       </MemoryRouter>
     </AppProvider>,
   );
